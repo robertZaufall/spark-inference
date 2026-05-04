@@ -28,7 +28,7 @@ export default {
     if (contentType.includes('text/html')) {
       let html = await resp.text();
       if (!html.includes('<base ')) {
-        html = html.replace(/<head(\\s*?)>/i, '<head$1><base href="/spark-inference/">');
+        html = html.replace(/<head(\s*?)>/i, '<head$1><base href="/spark-inference/">');
       }
       return new Response(html, {
         status: resp.status,
