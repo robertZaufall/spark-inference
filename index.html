@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DGX Spark LLM Decision Workbench</title>
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --panel: #11151b;
+      --panel-2: #151a21;
+      --panel-3: #0f1318;
+      --text: #edf2f7;
+      --muted: #a5b0bd;
+      --faint: #738091;
+      --border: #2a333f;
+      --border-2: #3a4552;
+      --green: #44d07b;
+      --blue: #6bb7ff;
+      --amber: #f1b84b;
+      --red: #ff746e;
+      --purple: #be8cff;
+      --chip: #1d2530;
+      --shadow: rgba(0,0,0,.35);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); }
+    body { line-height: 1.45; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .app { display: grid; grid-template-columns: 300px 1fr; min-height: 100vh; }
+    aside {
+      border-right: 1px solid var(--border);
+      background: #090b0e;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      padding: 22px 18px;
+    }
+    main { padding: 24px 28px 56px; overflow: hidden; }
+
+    .brand { display: flex; gap: 12px; align-items: center; margin-bottom: 22px; }
+    .mark { width: 34px; height: 34px; border: 1px solid var(--border-2); display: grid; place-items: center; font: 700 13px var(--mono); color: var(--green); background: #0f1612; }
+    h1 { font-size: 21px; line-height: 1.1; margin: 0; letter-spacing: -.02em; }
+    .subtitle { color: var(--muted); font-size: 13px; margin-top: 5px; }
+
+    .side-section { margin: 22px 0; }
+    .side-title { color: var(--faint); text-transform: uppercase; letter-spacing: .08em; font: 700 11px var(--mono); margin-bottom: 10px; }
+    .control { display: grid; gap: 8px; }
+    label.check { display: flex; gap: 10px; align-items: center; color: var(--muted); font-size: 13px; }
+    input[type="search"], select {
+      width: 100%; background: var(--panel); color: var(--text); border: 1px solid var(--border); padding: 10px 11px; border-radius: 0; outline: none;
+      font: 13px var(--sans);
+    }
+    input[type="search"]:focus, select:focus { border-color: var(--blue); }
+    input[type="checkbox"] { accent-color: var(--green); }
+    .button-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    button {
+      border: 1px solid var(--border); color: var(--text); background: var(--panel-2); padding: 9px 10px; cursor: pointer; font: 700 12px var(--mono); text-transform: uppercase; letter-spacing: .04em;
+    }
+    button:hover { border-color: var(--border-2); background: #1a2028; }
+    button.primary { border-color: #315d41; background: #102018; color: #b7f3c9; }
+    button.active { border-color: var(--green); color: var(--green); background: #111e17; }
+
+    .summary-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+    .metric {
+      background: var(--panel); border: 1px solid var(--border); padding: 14px 14px 12px; min-height: 82px;
+      box-shadow: 0 16px 50px var(--shadow);
+    }
+    .metric .k { color: var(--faint); font: 700 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .metric .v { font: 700 24px/1.1 var(--mono); margin-top: 8px; }
+    .metric .note { color: var(--muted); font-size: 12px; margin-top: 5px; }
+
+    .banner { border: 1px solid #4d3d1d; background: #171309; padding: 12px 14px; color: #f0d59c; font-size: 13px; margin-bottom: 18px; }
+    .banner strong { color: #ffcc72; }
+
+    .section-head { display: flex; justify-content: space-between; gap: 16px; align-items: end; margin: 26px 0 12px; }
+    h2 { font-size: 15px; letter-spacing: .06em; text-transform: uppercase; margin: 0; font-family: var(--mono); }
+    .section-head p { color: var(--muted); max-width: 820px; margin: 6px 0 0; font-size: 13px; }
+    .small { color: var(--muted); font-size: 12px; }
+
+    .table-wrap { overflow: auto; border: 1px solid var(--border); background: var(--panel-3); }
+    table { width: 100%; border-collapse: collapse; min-width: 1120px; }
+    th, td { border-bottom: 1px solid var(--border); padding: 10px 11px; text-align: left; vertical-align: top; font-size: 13px; }
+    th { position: sticky; top: 0; z-index: 1; background: #0d1117; color: var(--muted); font: 700 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; cursor: pointer; }
+    th.no-sort { cursor: default; }
+    tr:hover td { background: #151a21; }
+    tr.selected td { background: #132016; }
+    .mono { font-family: var(--mono); }
+    .rank { font: 700 13px var(--mono); color: var(--green); }
+    .model { font-weight: 800; color: #fff; }
+    .official { font: 11px var(--mono); color: var(--faint); margin-top: 2px; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 7px; border: 1px solid var(--border); background: var(--chip); color: var(--muted); font: 700 11px var(--mono); margin: 0 4px 4px 0; white-space: nowrap; }
+    .chip.good { color: #baf5ca; border-color: #245a35; background: #111e17; }
+    .chip.warn { color: #f5d38a; border-color: #59431d; background: #1d170c; }
+    .chip.bad { color: #ffb0aa; border-color: #62312d; background: #231213; }
+    .speed { font: 800 18px/1.1 var(--mono); color: var(--green); }
+    .range { color: var(--muted); font: 12px var(--mono); margin-top: 3px; }
+    .bar { height: 6px; background: #222a34; margin-top: 8px; width: 130px; }
+    .bar > span { display: block; height: 100%; background: var(--green); }
+    .rec-strong { color: var(--green); font-weight: 800; }
+    .rec-med { color: var(--amber); font-weight: 800; }
+    .rec-low { color: var(--red); font-weight: 800; }
+
+    .split { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 14px; margin-top: 14px; }
+    .panel { border: 1px solid var(--border); background: var(--panel); padding: 14px; min-width: 0; }
+    .panel h3 { margin: 0 0 9px; font-size: 14px; letter-spacing: .03em; }
+    .kv { display: grid; grid-template-columns: 145px 1fr; gap: 7px 12px; font-size: 13px; margin: 10px 0; }
+    .kv div:nth-child(odd) { color: var(--faint); font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+    .detail-notes { display: grid; gap: 9px; margin-top: 12px; }
+    .note-card { border-left: 3px solid var(--border-2); background: #10151b; padding: 10px; font-size: 13px; color: var(--muted); }
+    .note-card.good { border-left-color: var(--green); }
+    .note-card.warn { border-left-color: var(--amber); }
+    .note-card.bad { border-left-color: var(--red); }
+
+    .evidence-list { display: grid; gap: 9px; }
+    .evidence { border: 1px solid var(--border); padding: 10px; background: #0e1217; }
+    .evidence .title { font-weight: 800; }
+    .evidence .meta { color: var(--faint); font: 11px var(--mono); margin-top: 4px; }
+    .evidence .claim { color: var(--muted); font-size: 13px; margin-top: 6px; }
+
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+    .tab { padding: 8px 10px; border: 1px solid var(--border); color: var(--muted); background: #0f1318; font: 700 12px var(--mono); cursor: pointer; }
+    .tab.active { color: var(--green); border-color: #2f7444; background: #101d16; }
+    pre { margin: 0; overflow: auto; background: #050709; color: #d8e8f0; border: 1px solid var(--border); padding: 13px; font: 12px/1.5 var(--mono); }
+    .copy { margin-top: 8px; }
+
+    .matrix { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .engine { border: 1px solid var(--border); background: #10151b; padding: 12px; }
+    .engine h3 { margin: 0 0 6px; font-size: 14px; }
+    .engine p { color: var(--muted); font-size: 13px; margin: 0; }
+
+    .footer { color: var(--faint); font-size: 12px; margin-top: 32px; border-top: 1px solid var(--border); padding-top: 16px; }
+
+    @media (max-width: 1150px) {
+      .app { grid-template-columns: 1fr; }
+      aside { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+      .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .split { grid-template-columns: 1fr; }
+      .matrix { grid-template-columns: 1fr; }
+    }
+    @media print {
+      aside, .tabs, .copy, button { display: none !important; }
+      body { background: white; color: black; }
+      main { padding: 0; }
+      .panel, .metric, .table-wrap, .banner { border-color: #999; background: white; box-shadow: none; }
+      th, td { color: black; background: white; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="mark">GB10</div>
+        <div>
+          <h1>DGX Spark LLM Decision Workbench</h1>
+          <div class="subtitle">Evidence-first local inference analysis</div>
+        </div>
+      </div>
+
+      <div class="side-section">
+        <div class="side-title">Search</div>
+        <input id="search" type="search" placeholder="Filter models, engines, quants…" />
+      </div>
+
+      <div class="side-section">
+        <div class="side-title">Objective</div>
+        <div class="control" id="objectiveBtns">
+          <button class="active" data-objective="overall">Overall</button>
+          <button data-objective="speed">Raw speed</button>
+          <button data-objective="coding">Coding / agents</button>
+          <button data-objective="multimodal">Multimodal</button>
+        </div>
+      </div>
+
+      <div class="side-section">
+        <div class="side-title">Filters</div>
+        <label class="check"><input type="checkbox" id="moeOnly" /> MoE only</label>
+        <label class="check"><input type="checkbox" id="measuredOnly" checked /> measured DGX Spark numbers only</label>
+        <label class="check"><input type="checkbox" id="hideLow" /> hide weak recommendations</label>
+      </div>
+
+      <div class="side-section">
+        <div class="side-title">Actions</div>
+        <div class="button-row">
+          <button id="printBtn">Print</button>
+          <button id="resetBtn">Reset</button>
+        </div>
+      </div>
+
+      <div class="side-section">
+        <div class="side-title">Design stance</div>
+        <div class="small">No decorative bubbles. Primary tasks: find records, compare models, inspect one model, copy setup commands.</div>
+      </div>
+    </aside>
+
+    <main>
+      <section class="summary-grid" aria-label="Hardware summary">
+        <div class="metric"><div class="k">System</div><div class="v">DGX Spark</div><div class="note">GB10 Grace Blackwell Superchip</div></div>
+        <div class="metric"><div class="k">Memory</div><div class="v">128 GB</div><div class="note">Unified LPDDR5x</div></div>
+        <div class="metric"><div class="k">Bandwidth</div><div class="v">273 GB/s</div><div class="note">Primary decode bottleneck for dense models</div></div>
+        <div class="metric"><div class="k">Best measured</div><div class="v" id="bestMetric">52.7 tok/s</div><div class="note" id="bestMetricNote">Qwen3.6-35B-A3B FP8, vLLM</div></div>
+      </section>
+
+      <div class="banner"><strong>Interpretation rule:</strong> every throughput entry below is either measured on DGX Spark or explicitly marked as an evidence gap. Dense models are evaluated against the 273 GB/s bandwidth ceiling, not just memory fit.</div>
+
+      <div class="section-head">
+        <div>
+          <h2>Decision Table</h2>
+          <p>Click column headers to sort. Click a row to inspect evidence, trade-offs, and reproducible setup commands.</p>
+        </div>
+        <div class="small" id="rowCount"></div>
+      </div>
+
+      <div class="table-wrap">
+        <table id="modelTable">
+          <thead>
+            <tr>
+              <th data-key="rank">Rank</th>
+              <th data-key="name">Model</th>
+              <th data-key="type">Type</th>
+              <th data-key="activeParams">Params</th>
+              <th data-key="speedMax">Measured DGX Spark Speed</th>
+              <th data-key="quality">Quality Score</th>
+              <th data-key="engine">Engine / Quant</th>
+              <th data-key="recommendation">Recommendation</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="split">
+        <section class="panel" id="detailPanel">
+          <h2>Selected Model</h2>
+          <div id="detailContent"></div>
+        </section>
+
+        <section class="panel">
+          <h2>Evidence Ledger</h2>
+          <div class="evidence-list" id="evidenceList"></div>
+        </section>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <h2>Inference Engine Recommendations</h2>
+          <p>Engine guidance is based on retrieved DGX Spark measurements and vendor support notes, not generic GPU assumptions.</p>
+        </div>
+      </div>
+      <section class="matrix">
+        <div class="engine"><h3>vLLM</h3><p>Primary choice for Qwen3.6-35B-A3B-FP8 and Qwen3.6-27B-FP8. Best measured Qwen3.6-35B-A3B result uses FP8 weights, FP8 KV cache, FlashInfer, prefix caching, and fast safetensors loading.</p></div>
+        <div class="engine"><h3>llama.cpp</h3><p>Primary choice for GLM-4.7-Flash GGUF. The strongest single-Spark GLM-4.7-Flash throughput report found is llama.cpp Q4_K_M, not vLLM or SGLang.</p></div>
+        <div class="engine"><h3>SGLang</h3><p>Supported by Qwen and GLM ecosystems, but no clean single-DGX-Spark SGLang tok/s table was found for these exact targets. Use only when workload-specific testing justifies it.</p></div>
+      </section>
+
+      <div class="section-head">
+        <div>
+          <h2>Setup Commands</h2>
+          <p>Copy the baseline command for the selected deployment path. Treat these as starting points and re-run benchmark prompts locally.</p>
+        </div>
+      </div>
+      <section class="panel">
+        <div class="tabs" id="cmdTabs"></div>
+        <pre id="cmdBlock"></pre>
+        <button class="copy" id="copyBtn">Copy command</button>
+      </section>
+
+      <div class="section-head">
+        <div>
+          <h2>Ranked Recommendation</h2>
+          <p>The ranking prioritizes measured DGX Spark speed, setup practicality, and coding/agentic quality.</p>
+        </div>
+      </div>
+      <section class="panel">
+        <ol id="rankedList"></ol>
+      </section>
+
+      <div class="footer">
+        Sources are embedded as direct links in the evidence ledger. Last revised from the available public web results on 2026-05-05.
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const sources = {
+      hwDocs: {
+        title: 'NVIDIA DGX Spark User Guide: Hardware Overview',
+        url: 'https://docs.nvidia.com/dgx/dgx-spark/hardware.html',
+        date: 'Accessed 2026-05-05',
+        claim: '128 GB LPDDR5x unified memory, 256-bit interface, 4266 MHz, 273 GB/s bandwidth; Blackwell GPU and 20-core Arm CPU.'
+      },
+      nvidiaProduct: {
+        title: 'NVIDIA DGX Spark product specifications',
+        url: 'https://www.nvidia.com/en-us/products/workstations/dgx-spark/',
+        date: 'Accessed 2026-05-05',
+        claim: 'Grace Blackwell architecture, 128 GB unified LPDDR5x, 273 GB/s memory bandwidth, up to 1 PFLOP FP4 tensor performance.'
+      },
+      qwen35Forum: {
+        title: 'NVIDIA Developer Forums: Qwen/Qwen3.6-35B-A3B (and FP8) has landed',
+        url: 'https://forums.developer.nvidia.com/t/qwen-qwen3-6-35b-a3b-and-fp8-has-landed/366822',
+        date: '2026-04-16',
+        claim: 'Single DGX Spark vLLM FP8 decode measured at 52.73 tok/s shallow and ~52 tok/s through 16K depth; dual Spark TP=2 77.74→64.28 tok/s through 131K.'
+      },
+      gemma26Forum: {
+        title: 'NVIDIA Developer Forums: Uncensored Gemma-4-26B at 45 tok/s on DGX Spark',
+        url: 'https://forums.developer.nvidia.com/t/guide-uncensored-gemma-4-26b-at-45-tok-s-on-dgx-spark-actually-feels-great-to-use/366442',
+        date: '2026-04-13',
+        claim: 'Gemma 4 26B-A4B NVFP4 reported at 45.26 tok/s, with another user reporting 48.78 tok/s; full 262K context at ~47 GB GPU memory in revised settings.'
+      },
+      gemma31Forum: {
+        title: 'NVIDIA Developer Forums: Gemma 4 31B on DGX Spark Runtime FP8 Benchmarks',
+        url: 'https://forums.developer.nvidia.com/t/gemma-4-31b-on-dgx-spark-runtime-fp8-benchmarks-single-dual-node-tp-2/365814',
+        date: '2026-04-07',
+        claim: 'Single-node runtime FP8 Gemma 4 31B measured around 6.79–6.93 tok/s; post summarizes BF16 ~3.7 tok/s and dual-node TP=2 FP8 ~11.2 tok/s.'
+      },
+      qwen27Forum: {
+        title: 'NVIDIA Developer Forums: Best speed with Qwen3.6 27B without quantizing',
+        url: 'https://forums.developer.nvidia.com/t/whats-the-best-speed-we-can-get-with-qwen-3-6-27b-without-quantizing/367561',
+        date: '2026-04-23',
+        claim: 'Qwen3.6-27B-FP8 single DGX Spark baseline at 7.8 tok/s; MTP speculative decoding reported 14.1, 15.2, and 14.3 tok/s for 2, 3, and 4 tokens.'
+      },
+      glmForum: {
+        title: 'NVIDIA Developer Forums: GLM-4.7-Flash NVFP4 discussion, page 5',
+        url: 'https://forums.developer.nvidia.com/t/glm-4-7-flash-nvfp4-was-just-released-but-for-transformers-5-0-vllm-0-14/358048?page=5',
+        date: '2026',
+        claim: 'GLM-4.7-Flash GGUF Q4_K_M on llama.cpp reported at 59.24 tok/s shallow, 55.14 @4K, 45.72 @8K, 37.27 @16K, 32.14 @32K, 20.44 @100K.'
+      },
+      gemmaCard: {
+        title: 'Google Gemma 4 model card',
+        url: 'https://ai.google.dev/gemma/docs/core/model_card_4',
+        date: 'Accessed 2026-05-05',
+        claim: 'Official Gemma 4 architecture and benchmark table: Gemma 4 26B-A4B MoE has 25.2B total / 3.8B active; Gemma 4 31B dense has 30.7B parameters.'
+      },
+      qwen35Card: {
+        title: 'Qwen3.6-35B-A3B model card',
+        url: 'https://huggingface.co/Qwen/Qwen3.6-35B-A3B',
+        date: 'Accessed 2026-05-05',
+        claim: 'Official Qwen3.6-35B-A3B architecture and quality metrics: 35B total, 3B active, 262K native context, coding/agentic benchmark table.'
+      },
+      qwen27Card: {
+        title: 'Qwen3.6-27B-FP8 model card',
+        url: 'https://huggingface.co/Qwen/Qwen3.6-27B-FP8',
+        date: 'Accessed 2026-05-05',
+        claim: 'Official Qwen3.6-27B dense architecture and FP8 deployment notes.'
+      },
+      glmCard: {
+        title: 'zai-org/GLM-4.7-Flash model card',
+        url: 'https://huggingface.co/zai-org/GLM-4.7-Flash',
+        date: 'Accessed 2026-05-05',
+        claim: 'Official GLM-4.7-Flash model card: 30B-A3B MoE, vLLM/SGLang support notes, benchmark table.'
+      },
+      nngTable: {
+        title: 'Nielsen Norman Group: Data Tables, Four Major User Tasks',
+        url: 'https://www.nngroup.com/articles/data-tables/',
+        date: '2022-04-03',
+        claim: 'Table design should support finding records, comparing data, inspecting rows, and taking actions on records.'
+      }
+    };
+
+    const models = [
+      {
+        id: 'qwen35', rank: 1, name: 'Qwen3.6-35B-A3B', official: 'Qwen/Qwen3.6-35B-A3B-FP8', type: 'MoE', totalParams: '35B', activeParams: '3B active', context: '262K native', speedMax: 52.73, speedTypical: '≈52 tok/s', speedRange: '52.73 shallow; ~52 through 16K', engine: 'vLLM / FP8 / FP8 KV / FlashInfer', quality: 5, qualityLabel: 'Best coding-agent balance', recommendation: 'Highest', measured: true, multimodal: true, coding: true,
+        strengths: ['Best overall measured balance', 'Strong official coding/agentic scores', 'Vision encoder and tool calling', 'Long-context native window'],
+        weaknesses: ['Requires current vLLM stack', 'MTP removal improved one reported 2-node result; do not assume MTP helps'],
+        sources: ['qwen35Forum', 'qwen35Card'],
+        command: `vllm serve Qwen/Qwen3.6-35B-A3B-FP8 \\\n  --host 0.0.0.0 \\\n  --port 8000 \\\n  --max-model-len 262144 \\\n  --max-num-batched-tokens 16384 \\\n  --max-num-seqs 4 \\\n  --gpu-memory-utilization 0.70 \\\n  --kv-cache-dtype fp8 \\\n  --load-format fastsafetensors \\\n  --attention-backend flashinfer \\\n  --enable-prefix-caching \\\n  --enable-auto-tool-choice \\\n  --tool-call-parser qwen3_coder \\\n  --reasoning-parser qwen3`,
+        verdict: 'Default recommendation for DGX Spark when both speed and serious coding-agent quality matter.'
+      },
+      {
+        id: 'glm47', rank: 2, name: 'GLM-4.7-Flash', official: 'zai-org/GLM-4.7-Flash / unsloth GGUF', type: 'MoE', totalParams: '30B', activeParams: '3B active', context: '200K', speedMax: 59.24, speedTypical: '59.24 tok/s shallow', speedRange: '55.14 @4K; 32.14 @32K; 20.44 @100K', engine: 'llama.cpp / GGUF Q4_K_M', quality: 4, qualityLabel: 'Fast text-only tool model', recommendation: 'High', measured: true, multimodal: false, coding: true,
+        strengths: ['Fastest shallow-context report retrieved', 'Good tool/coding positioning', 'Long context', 'Simple GGUF deployment path'],
+        weaknesses: ['Text-only', 'DGX Spark evidence mainly llama.cpp/GGUF, not vLLM/SGLang'],
+        sources: ['glmForum', 'glmCard'],
+        command: `./build/bin/llama-server \\\n  --hf-repo unsloth/GLM-4.7-Flash-GGUF \\\n  --host 0.0.0.0 \\\n  --port 11434 \\\n  -c 524288 \\\n  -ngl 999 \\\n  -t 20 \\\n  -np 4 \\\n  --cont-batching \\\n  -ub 2048 \\\n  -fa 1 \\\n  --jinja \\\n  --reasoning-format auto \\\n  --no-mmap`,
+        verdict: 'Best choice when the workload is text-only and raw single-Spark interactive speed is the main requirement.'
+      },
+      {
+        id: 'gemma26', rank: 3, name: 'Gemma 4 26B-A4B', official: 'google/gemma-4-26B-A4B-it / NVFP4 variants', type: 'MoE', totalParams: '25.2B', activeParams: '3.8B active', context: '256K', speedMax: 48.78, speedTypical: '45–49 tok/s', speedRange: '45.26 tok/s; second user 48.78 tok/s', engine: 'vLLM / NVFP4', quality: 3.5, qualityLabel: 'Fast multimodal Gemma', recommendation: 'High for speed', measured: true, multimodal: true, coding: false,
+        strengths: ['Fast Gemma-family option', 'Multimodal', 'Large context', 'Low active-parameter decode cost'],
+        weaknesses: ['Lower official/community coding-agent scores than Qwen3.6', 'MoE quality trade-off vs dense Gemma 31B'],
+        sources: ['gemma26Forum', 'gemmaCard'],
+        command: `git clone https://github.com/ZengboJamesWang/dgx-spark-vllm-gemma4-26b-uncensored.git
+cd dgx-spark-vllm-gemma4-26b-uncensored
+bash scripts/start.sh
+bash scripts/benchmark.sh`,
+        verdict: 'Good choice for fast Gemma-compatible multimodal local inference; not the best coding-agent choice in this set.'
+      },
+      {
+        id: 'qwen27', rank: 4, name: 'Qwen3.6-27B', official: 'Qwen/Qwen3.6-27B-FP8', type: 'Dense', totalParams: '27B', activeParams: '27B active', context: '262K native', speedMax: 21.7, speedTypical: '15–21.7 tok/s with MTP', speedRange: '7.8 baseline; 15.2 average with MTP=3; later 18.8–21.7 recipe', engine: 'vLLM / FP8 / MTP', quality: 5, qualityLabel: 'Best dense coding option', recommendation: 'High quality / medium speed', measured: true, multimodal: true, coding: true,
+        strengths: ['Dense-model behavior', 'Strong coding-agent quality', 'Vision encoder', 'MTP can materially improve speed'],
+        weaknesses: ['Bandwidth-limited dense decode', 'Baseline 7.8 tok/s without MTP', 'DFlash reports not yet as cleanly corroborated'],
+        sources: ['qwen27Forum', 'qwen27Card'],
+        command: `vllm serve Qwen/Qwen3.6-27B-FP8 \\\n  --host 0.0.0.0 \\\n  --port 8000 \\\n  --max-model-len 262144 \\\n  --max-num-batched-tokens 16384 \\\n  --gpu-memory-utilization 0.75 \\\n  --kv-cache-dtype fp8 \\\n  --attention-backend flashinfer \\\n  --enable-prefix-caching \\\n  --enable-auto-tool-choice \\\n  --tool-call-parser qwen3_coder \\\n  --reasoning-parser qwen3 \\\n  --speculative-config '{"method":"qwen3_next_mtp","num_speculative_tokens":3}'`,
+        verdict: 'Use when dense coding-agent quality is preferred and 15–21 tok/s is acceptable.'
+      },
+      {
+        id: 'gemma31', rank: 5, name: 'Gemma 4 31B', official: 'google/gemma-4-31B-it / nvidia NVFP4 variant', type: 'Dense', totalParams: '30.7B', activeParams: '30.7B active', context: '256K', speedMax: 10.6, speedTypical: '≈6.5–10.6 tok/s', speedRange: 'BF16 ~3.7; FP8/NVFP4 ~6.5–6.9; AWQ int4 10.6', engine: 'vLLM / FP8 or NVFP4; AWQ int4 reports', quality: 4, qualityLabel: 'Strong Gemma quality', recommendation: 'Medium-low', measured: true, multimodal: true, coding: true,
+        strengths: ['Strongest Gemma quality', 'Multimodal', 'Official NVFP4 Blackwell path'],
+        weaknesses: ['Slow dense decode on 273 GB/s memory', 'Poor speed/value relative to MoE alternatives', 'Early setup workarounds reported'],
+        sources: ['gemma31Forum', 'gemmaCard'],
+        command: `HF_HOME=/mnt/tank/models ./run-recipe.sh gemma-4-31b-fp8 --setup --solo`,
+        verdict: 'Avoid as the default. Choose only when dense Gemma behavior or Gemma-specific compatibility is required.'
+      }
+    ];
+
+    const hardwareEvidence = ['hwDocs', 'nvidiaProduct', 'nngTable'];
+    let sortKey = 'rank';
+    let sortDir = 1;
+    let selectedId = 'qwen35';
+    let objective = 'overall';
+
+    const tbody = document.querySelector('#modelTable tbody');
+    const detailContent = document.getElementById('detailContent');
+    const evidenceList = document.getElementById('evidenceList');
+    const rowCount = document.getElementById('rowCount');
+    const cmdTabs = document.getElementById('cmdTabs');
+    const cmdBlock = document.getElementById('cmdBlock');
+    const rankedList = document.getElementById('rankedList');
+
+    function recClass(rec) {
+      if (rec === 'Highest' || rec.startsWith('High')) return 'rec-strong';
+      if (rec.includes('medium') || rec.includes('Medium')) return 'rec-med';
+      return 'rec-low';
+    }
+    function evidenceClass(m) {
+      if (m.speedMax >= 45) return 'good';
+      if (m.speedMax >= 15) return 'warn';
+      return 'bad';
+    }
+    function objectiveRank(m) {
+      if (objective === 'speed') return -m.speedMax;
+      if (objective === 'coding') return -(m.quality * 10 + (m.coding ? 5 : 0) + Math.min(m.speedMax, 55) / 20);
+      if (objective === 'multimodal') return -((m.multimodal ? 100 : 0) + m.quality * 10 + Math.min(m.speedMax, 55) / 10);
+      return m.rank;
+    }
+    function filteredModels() {
+      const q = document.getElementById('search').value.trim().toLowerCase();
+      const moeOnly = document.getElementById('moeOnly').checked;
+      const measuredOnly = document.getElementById('measuredOnly').checked;
+      const hideLow = document.getElementById('hideLow').checked;
+      return models.filter(m => {
+        const hay = [m.name, m.official, m.type, m.engine, m.recommendation, m.qualityLabel, ...m.strengths, ...m.weaknesses].join(' ').toLowerCase();
+        if (q && !hay.includes(q)) return false;
+        if (moeOnly && m.type !== 'MoE') return false;
+        if (measuredOnly && !m.measured) return false;
+        if (hideLow && m.recommendation === 'Medium-low') return false;
+        return true;
+      }).sort((a,b) => {
+        if (sortKey === 'rank' && objective !== 'overall') return objectiveRank(a) - objectiveRank(b);
+        const av = a[sortKey];
+        const bv = b[sortKey];
+        if (typeof av === 'number' && typeof bv === 'number') return (av - bv) * sortDir;
+        return String(av).localeCompare(String(bv)) * sortDir;
+      });
+    }
+    function renderTable() {
+      const rows = filteredModels();
+      tbody.innerHTML = rows.map((m, idx) => `
+        <tr data-id="${m.id}" class="${m.id === selectedId ? 'selected' : ''}">
+          <td><span class="rank">${objective === 'overall' ? m.rank : idx + 1}</span></td>
+          <td><div class="model">${m.name}</div><div class="official">${m.official}</div></td>
+          <td><span class="chip ${m.type === 'MoE' ? 'good' : 'warn'}">${m.type}</span></td>
+          <td><span class="mono">${m.totalParams}</span><br><span class="small">${m.activeParams}</span></td>
+          <td><div class="speed">${m.speedTypical}</div><div class="range">${m.speedRange}</div><div class="bar"><span style="width:${Math.min(100, m.speedMax/60*100)}%"></span></div></td>
+          <td><span class="chip ${m.quality >= 5 ? 'good' : m.quality >= 4 ? 'warn' : ''}">${m.quality}/5</span><br><span class="small">${m.qualityLabel}</span></td>
+          <td><span class="mono">${m.engine}</span></td>
+          <td><span class="${recClass(m.recommendation)}">${m.recommendation}</span><br><span class="small">${m.verdict}</span></td>
+        </tr>`).join('');
+      rowCount.textContent = `${rows.length} model${rows.length === 1 ? '' : 's'} shown`;
+      tbody.querySelectorAll('tr').forEach(tr => tr.addEventListener('click', () => {
+        selectedId = tr.dataset.id;
+        renderAll();
+      }));
+      if (!rows.find(m => m.id === selectedId) && rows[0]) selectedId = rows[0].id;
+    }
+    function renderDetail() {
+      const m = models.find(x => x.id === selectedId) || models[0];
+      detailContent.innerHTML = `
+        <h3>${m.name}</h3>
+        <div class="kv">
+          <div>Official</div><div>${m.official}</div>
+          <div>Architecture</div><div>${m.type}</div>
+          <div>Total params</div><div>${m.totalParams}</div>
+          <div>Active params</div><div>${m.activeParams}</div>
+          <div>Context</div><div>${m.context}</div>
+          <div>Measured speed</div><div><strong>${m.speedTypical}</strong> <span class="small">(${m.speedRange})</span></div>
+          <div>Engine path</div><div>${m.engine}</div>
+        </div>
+        <div>
+          ${m.strengths.map(s => `<span class="chip good">+ ${s}</span>`).join('')}
+          ${m.weaknesses.map(w => `<span class="chip warn">− ${w}</span>`).join('')}
+        </div>
+        <div class="detail-notes">
+          <div class="note-card ${evidenceClass(m)}"><strong>Decision:</strong> ${m.verdict}</div>
+          <div class="note-card"><strong>Trade-off:</strong> ${m.type === 'MoE' ? 'MoE speed comes from low active parameters; verify task quality against your target workload.' : 'Dense models pay the full parameter-read cost on a 273 GB/s memory subsystem; fit does not imply fast decode.'}</div>
+        </div>`;
+    }
+    function renderEvidence() {
+      const m = models.find(x => x.id === selectedId) || models[0];
+      const ids = [...hardwareEvidence, ...m.sources];
+      evidenceList.innerHTML = ids.map(id => {
+        const s = sources[id];
+        return `<div class="evidence"><div class="title"><a href="${s.url}" target="_blank" rel="noopener">${s.title}</a></div><div class="meta">${s.date}</div><div class="claim">${s.claim}</div></div>`;
+      }).join('');
+    }
+    function renderCommands() {
+      cmdTabs.innerHTML = models.map(m => `<button class="tab ${m.id === selectedId ? 'active' : ''}" data-id="${m.id}">${m.name}</button>`).join('');
+      const m = models.find(x => x.id === selectedId) || models[0];
+      cmdBlock.textContent = m.command;
+      cmdTabs.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => { selectedId = b.dataset.id; renderAll(); }));
+    }
+    function renderRankedList() {
+      const ranked = [...models].sort((a,b) => a.rank - b.rank);
+      rankedList.innerHTML = ranked.map(m => `<li><strong>${m.name}</strong> — ${m.verdict} <span class="small">Measured: ${m.speedTypical}; ${m.engine}.</span></li>`).join('');
+    }
+    function renderBestMetric() {
+      const rows = filteredModels();
+      const best = [...rows].sort((a,b) => b.speedMax - a.speedMax)[0];
+      if (best) {
+        document.getElementById('bestMetric').textContent = best.speedTypical;
+        document.getElementById('bestMetricNote').textContent = `${best.name}, ${best.engine}`;
+      }
+    }
+    function renderAll() {
+      renderTable(); renderDetail(); renderEvidence(); renderCommands(); renderRankedList(); renderBestMetric();
+    }
+
+    document.querySelectorAll('th[data-key]').forEach(th => th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if (sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = key === 'speedMax' || key === 'quality' ? -1 : 1; }
+      renderAll();
+    }));
+    document.getElementById('search').addEventListener('input', renderAll);
+    document.getElementById('moeOnly').addEventListener('change', renderAll);
+    document.getElementById('measuredOnly').addEventListener('change', renderAll);
+    document.getElementById('hideLow').addEventListener('change', renderAll);
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      document.getElementById('search').value = '';
+      document.getElementById('moeOnly').checked = false;
+      document.getElementById('measuredOnly').checked = true;
+      document.getElementById('hideLow').checked = false;
+      objective = 'overall'; sortKey = 'rank'; sortDir = 1; selectedId = 'qwen35';
+      document.querySelectorAll('#objectiveBtns button').forEach(b => b.classList.toggle('active', b.dataset.objective === 'overall'));
+      renderAll();
+    });
+    document.querySelectorAll('#objectiveBtns button').forEach(b => b.addEventListener('click', () => {
+      objective = b.dataset.objective;
+      document.querySelectorAll('#objectiveBtns button').forEach(x => x.classList.toggle('active', x === b));
+      sortKey = 'rank'; sortDir = 1;
+      renderAll();
+    }));
+    document.getElementById('copyBtn').addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(cmdBlock.textContent); document.getElementById('copyBtn').textContent = 'Copied'; setTimeout(() => document.getElementById('copyBtn').textContent = 'Copy command', 1200); }
+      catch { document.getElementById('copyBtn').textContent = 'Select + copy manually'; }
+    });
+    renderAll();
+  </script>
+</body>
+</html>

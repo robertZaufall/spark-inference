@@ -1,0 +1,11 @@
+name = "spark-inference-proxy"
+main = "index.mjs"
+compatibility_date = "2026-05-05"
+
+[[routes]]
+pattern = "glaubi.net/spark-inference"
+zone_name = "glaubi.net"
+
+[[routes]]
+pattern = "glaubi.net/spark-inference/*"
+zone_name = "glaubi.net"
