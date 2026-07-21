@@ -100,8 +100,9 @@
     .model { font-weight: 800; color: #fff; }
     .official { font: 11px var(--mono); color: var(--faint); margin-top: 2px; }
     .model-links { display: flex; flex-wrap: wrap; gap: 4px 9px; margin-top: 5px; }
-    .model-detail-link, .model-card-link { color: #9dccff; font: 700 10px var(--mono); letter-spacing: .02em; }
+    .model-detail-link, .model-source-link, .model-card-link { color: #9dccff; font: 700 10px var(--mono); letter-spacing: .02em; }
     .model-detail-link { color: #8ee5a8; }
+    .model-source-link { color: #be8cff; }
     .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 7px; border: 1px solid var(--border); border-radius: 999px; background: var(--chip); color: var(--muted); font: 700 11px var(--mono); margin: 0 4px 4px 0; white-space: nowrap; }
     .chip.good { color: #baf5ca; border-color: #245a35; background: #111e17; }
     .chip.warn { color: #f5d38a; border-color: #59431d; background: #1d170c; }
@@ -376,7 +377,7 @@
         verdict: 'Best choice when the workload is text-only and raw single-Spark interactive speed is the main requirement.'
       },
       {
-        id: 'gemma26', rank: 3, name: 'Gemma 4 26B-A4B', official: 'google/gemma-4-26B-A4B-it / NVFP4 variants', type: 'MoE', totalParams: '25.2B', activeParams: '3.8B active', context: '256K', speedMax: 48.78, speedTypical: '45–49 tok/s', speedRange: '45.26 tok/s; second user 48.78 tok/s', engine: 'vLLM / NVFP4', quality: 3.5, qualityLabel: 'Fast multimodal Gemma', recommendation: 'High for speed', measured: true, multimodal: true, coding: false,
+        id: 'gemma26', rank: 3, name: 'Gemma 4 26B-A4B', official: 'google/gemma-4-26B-A4B-it / NVFP4 variants', howToSparkModelUrl: 'https://howtospark.com/models/gemma-4-26b-a4b-it', type: 'MoE', totalParams: '25.2B', activeParams: '3.8B active', context: '256K', speedMax: 48.78, speedTypical: '45–49 tok/s', speedRange: '45.26 tok/s; second user 48.78 tok/s', engine: 'vLLM / NVFP4', quality: 3.5, qualityLabel: 'Fast multimodal Gemma', recommendation: 'High for speed', measured: true, multimodal: true, coding: false,
         strengths: ['Fast Gemma-family option', 'Multimodal', 'Large context', 'Low active-parameter decode cost'],
         weaknesses: ['Lower official/community coding-agent scores than Qwen3.6', 'MoE quality trade-off vs dense Gemma 31B'],
         sources: ['gemma26Forum', 'gemmaCard'],
@@ -510,7 +511,7 @@ bash scripts/benchmark.sh`,
       tbody.innerHTML = rows.map((m, idx) => `
         <tr data-id="${m.id}" class="${m.id === selectedId ? 'selected' : ''}">
           <td><span class="rank">${objective === 'overall' ? m.rank : idx + 1}</span></td>
-          <td><div class="model">${m.name}</div><div class="official">${m.official}</div><div class="model-links"><a class="model-detail-link" href="#detailPanel" data-select-model="${m.id}">View details ↓</a>${m.nvidiaModelCardUrl ? `<a class="model-card-link" href="${m.nvidiaModelCardUrl}" target="_blank" rel="noopener">NVIDIA model card ↗</a>` : ''}</div></td>
+          <td><div class="model">${m.name}</div><div class="official">${m.official}</div><div class="model-links"><a class="model-detail-link" href="#detailPanel" data-select-model="${m.id}">View details ↓</a>${m.howToSparkModelUrl ? `<a class="model-source-link" href="${m.howToSparkModelUrl}" target="_blank" rel="noopener">HowToSpark model ↗</a>` : ''}${m.nvidiaModelCardUrl ? `<a class="model-card-link" href="${m.nvidiaModelCardUrl}" target="_blank" rel="noopener">NVIDIA model card ↗</a>` : ''}</div></td>
           <td><span class="chip ${m.type === 'MoE' ? 'good' : 'warn'}">${m.type}</span></td>
           <td><span class="mono">${m.totalParams}</span><br><span class="small">${m.activeParams}</span></td>
           <td><div class="speed">${m.speedTypical}</div><div class="range">${m.speedRange}</div><div class="bar"><span style="width:${Math.min(100, m.speedMax/60*100)}%"></span></div></td>
@@ -537,7 +538,7 @@ bash scripts/benchmark.sh`,
       detailContent.innerHTML = `
         <h3>${m.name}</h3>
         <div class="kv">
-          <div>Official</div><div>${m.official}${m.nvidiaModelCardUrl ? ` · <a href="${m.nvidiaModelCardUrl}" target="_blank" rel="noopener">NVIDIA model card ↗</a>` : ''}</div>
+          <div>Official</div><div>${m.official}${m.howToSparkModelUrl ? ` · <a href="${m.howToSparkModelUrl}" target="_blank" rel="noopener">HowToSpark model ↗</a>` : ''}${m.nvidiaModelCardUrl ? ` · <a href="${m.nvidiaModelCardUrl}" target="_blank" rel="noopener">NVIDIA model card ↗</a>` : ''}</div>
           <div>Architecture</div><div>${m.type}</div>
           <div>Total params</div><div>${m.totalParams}</div>
           <div>Active params</div><div>${m.activeParams}</div>

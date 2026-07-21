@@ -28,6 +28,9 @@ data.models.forEach((model, index) => {
   if (model.nvidiaModelCardUrl && !/^https:\/\/build\.nvidia\.com\/.+\/modelcard$/.test(model.nvidiaModelCardUrl)) {
     throw new Error(`Invalid NVIDIA model-card URL for ${model.id}`);
   }
+  if (model.howToSparkModelUrl && !/^https:\/\/howtospark\.com\/models\/.+/.test(model.howToSparkModelUrl)) {
+    throw new Error(`Invalid HowToSpark model URL for ${model.id}`);
+  }
 });
 
 const html = await fs.readFile(path.join(root, 'index.html'), 'utf8');

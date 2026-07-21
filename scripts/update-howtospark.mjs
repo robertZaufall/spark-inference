@@ -229,6 +229,8 @@ function modelFromRecipe(recipe, matchingBenchmarks, goal, rank, command) {
       rank,
       name: displayName(recipe, matchingBenchmarks),
       official: recipe.via || 'See HowToSpark recipe',
+      howToSparkModelUrl: config.howToSparkModelPaths?.[recipe.slug]
+        ? absoluteUrl(config.howToSparkModelPaths[recipe.slug]) : null,
       nvidiaModelCardUrl: config.nvidiaModelCards?.[recipe.slug] || null,
       type: kind,
       totalParams: params.totalParams,
@@ -283,6 +285,8 @@ function modelFromBenchmarkGroup(slug, matchingBenchmarks, rank) {
       rank,
       name: first.name,
       official: 'See HowToSpark benchmark',
+      howToSparkModelUrl: config.howToSparkModelPaths?.[slug]
+        ? absoluteUrl(config.howToSparkModelPaths[slug]) : null,
       nvidiaModelCardUrl: config.nvidiaModelCards?.[slug] || null,
       type: 'Unknown',
       totalParams: 'Not stated',

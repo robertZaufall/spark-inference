@@ -7,5 +7,13 @@
     "laguna-xs-2-1-nvfp4": "https://build.nvidia.com/poolside/laguna-xs-2.1/modelcard",
     "glm-5-2-dual-spark-tp2": "https://build.nvidia.com/z-ai/glm-5.2/modelcard",
     "deepseek-v4-flash-dspark-dual-spark-1m": "https://build.nvidia.com/deepseek-ai/deepseek-v4-flash/modelcard"
+  },
+  "howToSparkModelPaths": {
+    "qwen3-6-35b-a3b-nvfp4-fast": "/models/qwen3-6-35b-a3b",
+    "laguna-xs-2-1-nvfp4": "/models/laguna-xs-2-1",
+    "glm-5-2-dual-spark-tp2": "/models/glm-5-2",
+    "deepseek-v4-flash-dspark-dual-spark-1m": "/models/deepseek-v4-flash-dspark",
+    "hy3-nvfp4-dual-spark-tp2": "/models/tencent-hy3",
+    "hy3-reap-48e": "/models/hy3-reap-48e"
   }
 }
