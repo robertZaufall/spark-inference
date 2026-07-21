@@ -99,7 +99,9 @@
     .rank { font: 700 13px var(--mono); color: var(--green); }
     .model { font-weight: 800; color: #fff; }
     .official { font: 11px var(--mono); color: var(--faint); margin-top: 2px; }
-    .model-card-link { display: inline-block; margin-top: 4px; color: #9dccff; font: 700 10px var(--mono); letter-spacing: .02em; }
+    .model-links { display: flex; flex-wrap: wrap; gap: 4px 9px; margin-top: 5px; }
+    .model-detail-link, .model-card-link { color: #9dccff; font: 700 10px var(--mono); letter-spacing: .02em; }
+    .model-detail-link { color: #8ee5a8; }
     .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 7px; border: 1px solid var(--border); border-radius: 999px; background: var(--chip); color: var(--muted); font: 700 11px var(--mono); margin: 0 4px 4px 0; white-space: nowrap; }
     .chip.good { color: #baf5ca; border-color: #245a35; background: #111e17; }
     .chip.warn { color: #f5d38a; border-color: #59431d; background: #1d170c; }
@@ -508,7 +510,7 @@ bash scripts/benchmark.sh`,
       tbody.innerHTML = rows.map((m, idx) => `
         <tr data-id="${m.id}" class="${m.id === selectedId ? 'selected' : ''}">
           <td><span class="rank">${objective === 'overall' ? m.rank : idx + 1}</span></td>
-          <td><div class="model">${m.name}</div><div class="official">${m.official}</div>${m.nvidiaModelCardUrl ? `<a class="model-card-link" href="${m.nvidiaModelCardUrl}" target="_blank" rel="noopener">NVIDIA model card ↗</a>` : ''}</td>
+          <td><div class="model">${m.name}</div><div class="official">${m.official}</div><div class="model-links"><a class="model-detail-link" href="#detailPanel" data-select-model="${m.id}">View details ↓</a>${m.nvidiaModelCardUrl ? `<a class="model-card-link" href="${m.nvidiaModelCardUrl}" target="_blank" rel="noopener">NVIDIA model card ↗</a>` : ''}</div></td>
           <td><span class="chip ${m.type === 'MoE' ? 'good' : 'warn'}">${m.type}</span></td>
           <td><span class="mono">${m.totalParams}</span><br><span class="small">${m.activeParams}</span></td>
           <td><div class="speed">${m.speedTypical}</div><div class="range">${m.speedRange}</div><div class="bar"><span style="width:${Math.min(100, m.speedMax/60*100)}%"></span></div></td>
@@ -517,6 +519,12 @@ bash scripts/benchmark.sh`,
           <td><span class="${recClass(m.recommendation)}">${m.recommendation}</span></td>
         </tr>`).join('');
       rowCount.textContent = `${rows.length} model${rows.length === 1 ? '' : 's'} shown`;
+      tbody.querySelectorAll('[data-select-model]').forEach(link => link.addEventListener('click', event => {
+        event.preventDefault();
+        selectedId = link.dataset.selectModel;
+        renderAll();
+        document.getElementById('detailPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }));
       tbody.querySelectorAll('tr').forEach(tr => tr.addEventListener('click', event => {
         if (event.target.closest('a')) return;
         selectedId = tr.dataset.id;
