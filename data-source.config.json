@@ -2,5 +2,10 @@
   "mode": "transition",
   "sourceUrl": "https://howtospark.com/",
   "minimumModels": 3,
-  "maximumAgeDays": 14
+  "maximumAgeDays": 14,
+  "nvidiaModelCards": {
+    "laguna-xs-2-1-nvfp4": "https://build.nvidia.com/poolside/laguna-xs-2.1/modelcard",
+    "glm-5-2-dual-spark-tp2": "https://build.nvidia.com/z-ai/glm-5.2/modelcard",
+    "deepseek-v4-flash-dspark-dual-spark-1m": "https://build.nvidia.com/deepseek-ai/deepseek-v4-flash/modelcard"
+  }
 }

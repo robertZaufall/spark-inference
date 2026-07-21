@@ -25,6 +25,9 @@ data.models.forEach((model, index) => {
     throw new Error(`Missing evidence source for ${model.id}`);
   }
   if (!model.command || !model.verdict) throw new Error(`Incomplete recipe data for ${model.id}`);
+  if (model.nvidiaModelCardUrl && !/^https:\/\/build\.nvidia\.com\/.+\/modelcard$/.test(model.nvidiaModelCardUrl)) {
+    throw new Error(`Invalid NVIDIA model-card URL for ${model.id}`);
+  }
 });
 
 const html = await fs.readFile(path.join(root, 'index.html'), 'utf8');
