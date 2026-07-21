@@ -37,6 +37,9 @@ const html = await fs.readFile(path.join(root, 'index.html'), 'utf8');
 const $ = cheerio.load(html);
 if (!$('script[src="data/howtospark-data.js"]').length) throw new Error('index.html does not load the generated snapshot');
 if (!html.includes('data-select-model')) throw new Error('index.html does not expose per-model detail links');
+if (!html.includes("return m.howToSparkModelUrl || 'https://howtospark.com/models'")) {
+  throw new Error('index.html does not guarantee a HowToSpark link on every model row');
+}
 $('script:not([src])').each((index, script) => {
   const source = $(script).html();
   if (source.trim()) new Function(source);

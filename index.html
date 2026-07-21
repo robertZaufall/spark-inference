@@ -396,7 +396,7 @@ bash scripts/benchmark.sh`,
         verdict: 'Use when dense coding-agent quality is preferred and 15–21 tok/s is acceptable.'
       },
       {
-        id: 'gemma31', rank: 5, name: 'Gemma 4 31B', official: 'google/gemma-4-31B-it / nvidia NVFP4 variant', nvidiaModelCardUrl: 'https://build.nvidia.com/google/gemma-4-31b-it/modelcard', type: 'Dense', totalParams: '30.7B', activeParams: '30.7B active', context: '256K', speedMax: 10.6, speedTypical: '≈6.5–10.6 tok/s', speedRange: 'BF16 ~3.7; FP8/NVFP4 ~6.5–6.9; AWQ int4 10.6', engine: 'vLLM / FP8 or NVFP4; AWQ int4 reports', quality: 4, qualityLabel: 'Strong Gemma quality', recommendation: 'Medium-low', measured: true, multimodal: true, coding: true,
+        id: 'gemma31', rank: 5, name: 'Gemma 4 31B', official: 'google/gemma-4-31B-it / nvidia NVFP4 variant', howToSparkModelUrl: 'https://howtospark.com/models/google/gemma-4-31B-it', nvidiaModelCardUrl: 'https://build.nvidia.com/google/gemma-4-31b-it/modelcard', type: 'Dense', totalParams: '30.7B', activeParams: '30.7B active', context: '256K', speedMax: 10.6, speedTypical: '≈6.5–10.6 tok/s', speedRange: 'BF16 ~3.7; FP8/NVFP4 ~6.5–6.9; AWQ int4 10.6', engine: 'vLLM / FP8 or NVFP4; AWQ int4 reports', quality: 4, qualityLabel: 'Strong Gemma quality', recommendation: 'Medium-low', measured: true, multimodal: true, coding: true,
         strengths: ['Strongest Gemma quality', 'Multimodal', 'Official NVFP4 Blackwell path'],
         weaknesses: ['Slow dense decode on 273 GB/s memory', 'Poor speed/value relative to MoE alternatives', 'Early setup workarounds reported'],
         sources: ['gemma31Forum', 'gemmaCard'],
@@ -480,6 +480,9 @@ bash scripts/benchmark.sh`,
       if (m.speedMax >= 15) return 'warn';
       return 'bad';
     }
+    function howToSparkLink(m) {
+      return m.howToSparkModelUrl || 'https://howtospark.com/models';
+    }
     function objectiveRank(m) {
       if (objective === 'speed') return -m.speedMax;
       if (objective === 'coding') return -(m.quality * 10 + (m.coding ? 5 : 0) + Math.min(m.speedMax, 55) / 20);
@@ -511,7 +514,7 @@ bash scripts/benchmark.sh`,
       tbody.innerHTML = rows.map((m, idx) => `
         <tr data-id="${m.id}" class="${m.id === selectedId ? 'selected' : ''}">
           <td><span class="rank">${objective === 'overall' ? m.rank : idx + 1}</span></td>
-          <td><div class="model">${m.name}</div><div class="official">${m.official}</div><div class="model-links"><a class="model-detail-link" href="#detailPanel" data-select-model="${m.id}">View details ↓</a>${m.howToSparkModelUrl ? `<a class="model-source-link" href="${m.howToSparkModelUrl}" target="_blank" rel="noopener">HowToSpark model ↗</a>` : ''}${m.nvidiaModelCardUrl ? `<a class="model-card-link" href="${m.nvidiaModelCardUrl}" target="_blank" rel="noopener">NVIDIA model card ↗</a>` : ''}</div></td>
+          <td><div class="model">${m.name}</div><div class="official">${m.official}</div><div class="model-links"><a class="model-detail-link" href="#detailPanel" data-select-model="${m.id}">View details ↓</a><a class="model-source-link" href="${howToSparkLink(m)}" target="_blank" rel="noopener">HowToSpark model ↗</a>${m.nvidiaModelCardUrl ? `<a class="model-card-link" href="${m.nvidiaModelCardUrl}" target="_blank" rel="noopener">NVIDIA model card ↗</a>` : ''}</div></td>
           <td><span class="chip ${m.type === 'MoE' ? 'good' : 'warn'}">${m.type}</span></td>
           <td><span class="mono">${m.totalParams}</span><br><span class="small">${m.activeParams}</span></td>
           <td><div class="speed">${m.speedTypical}</div><div class="range">${m.speedRange}</div><div class="bar"><span style="width:${Math.min(100, m.speedMax/60*100)}%"></span></div></td>
@@ -538,7 +541,7 @@ bash scripts/benchmark.sh`,
       detailContent.innerHTML = `
         <h3>${m.name}</h3>
         <div class="kv">
-          <div>Official</div><div>${m.official}${m.howToSparkModelUrl ? ` · <a href="${m.howToSparkModelUrl}" target="_blank" rel="noopener">HowToSpark model ↗</a>` : ''}${m.nvidiaModelCardUrl ? ` · <a href="${m.nvidiaModelCardUrl}" target="_blank" rel="noopener">NVIDIA model card ↗</a>` : ''}</div>
+          <div>Official</div><div>${m.official} · <a href="${howToSparkLink(m)}" target="_blank" rel="noopener">HowToSpark model ↗</a>${m.nvidiaModelCardUrl ? ` · <a href="${m.nvidiaModelCardUrl}" target="_blank" rel="noopener">NVIDIA model card ↗</a>` : ''}</div>
           <div>Architecture</div><div>${m.type}</div>
           <div>Total params</div><div>${m.totalParams}</div>
           <div>Active params</div><div>${m.activeParams}</div>
