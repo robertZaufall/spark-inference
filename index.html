@@ -22,6 +22,7 @@
       --purple: #be8cff;
       --chip: #1d2530;
       --shadow: rgba(0,0,0,.35);
+      --radius: 7px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -35,7 +36,7 @@
     .app { display: grid; grid-template-columns: 300px 1fr; min-height: 100vh; }
     aside {
       border-right: 1px solid var(--border);
-      background: #090b0e;
+      background: linear-gradient(180deg, #090b0e 0%, #0b0e12 100%);
       position: sticky;
       top: 0;
       height: 100vh;
@@ -45,7 +46,7 @@
     main { padding: 24px 28px 56px; overflow: hidden; }
 
     .brand { display: flex; gap: 12px; align-items: center; margin-bottom: 22px; }
-    .mark { width: 34px; height: 34px; border: 1px solid var(--border-2); display: grid; place-items: center; font: 700 13px var(--mono); color: var(--green); background: #0f1612; }
+    .mark { width: 34px; height: 34px; border: 1px solid var(--border-2); border-radius: var(--radius); display: grid; place-items: center; font: 700 13px var(--mono); color: var(--green); background: #0f1612; }
     h1 { font-size: 21px; line-height: 1.1; margin: 0; letter-spacing: -.02em; }
     .subtitle { color: var(--muted); font-size: 13px; margin-top: 5px; }
 
@@ -54,29 +55,30 @@
     .control { display: grid; gap: 8px; }
     label.check { display: flex; gap: 10px; align-items: center; color: var(--muted); font-size: 13px; }
     input[type="search"], select {
-      width: 100%; background: var(--panel); color: var(--text); border: 1px solid var(--border); padding: 10px 11px; border-radius: 0; outline: none;
+      width: 100%; background: var(--panel); color: var(--text); border: 1px solid var(--border); padding: 10px 11px; border-radius: var(--radius); outline: none;
       font: 13px var(--sans);
     }
     input[type="search"]:focus, select:focus { border-color: var(--blue); }
     input[type="checkbox"] { accent-color: var(--green); }
-    .button-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     button {
-      border: 1px solid var(--border); color: var(--text); background: var(--panel-2); padding: 9px 10px; cursor: pointer; font: 700 12px var(--mono); text-transform: uppercase; letter-spacing: .04em;
+      border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); background: var(--panel-2); padding: 9px 10px; cursor: pointer; font: 700 12px var(--mono); text-transform: uppercase; letter-spacing: .04em; transition: border-color .15s ease, background .15s ease, color .15s ease;
     }
     button:hover { border-color: var(--border-2); background: #1a2028; }
+    button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+    button.full { width: 100%; }
     button.primary { border-color: #315d41; background: #102018; color: #b7f3c9; }
     button.active { border-color: var(--green); color: var(--green); background: #111e17; }
 
     .summary-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
     .metric {
-      background: var(--panel); border: 1px solid var(--border); padding: 14px 14px 12px; min-height: 82px;
-      box-shadow: 0 16px 50px var(--shadow);
+      background: linear-gradient(180deg, #12171e 0%, var(--panel) 100%); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 14px 12px; min-height: 82px;
+      box-shadow: 0 14px 38px var(--shadow);
     }
     .metric .k { color: var(--faint); font: 700 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
     .metric .v { font: 700 24px/1.1 var(--mono); margin-top: 8px; }
     .metric .note { color: var(--muted); font-size: 12px; margin-top: 5px; }
 
-    .banner { border: 1px solid #4d3d1d; background: #171309; padding: 12px 14px; color: #f0d59c; font-size: 13px; margin-bottom: 18px; }
+    .banner { border: 1px solid #4d3d1d; border-radius: var(--radius); background: #171309; padding: 12px 14px; color: #f0d59c; font-size: 13px; margin-bottom: 18px; }
     .banner strong { color: #ffcc72; }
 
     .section-head { display: flex; justify-content: space-between; gap: 16px; align-items: end; margin: 26px 0 12px; }
@@ -84,18 +86,20 @@
     .section-head p { color: var(--muted); max-width: 820px; margin: 6px 0 0; font-size: 13px; }
     .small { color: var(--muted); font-size: 12px; }
 
-    .table-wrap { overflow: auto; border: 1px solid var(--border); background: var(--panel-3); }
-    table { width: 100%; border-collapse: collapse; min-width: 1120px; }
+    .table-wrap { overflow: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel-3); }
+    table { width: 100%; border-collapse: collapse; min-width: 1060px; }
     th, td { border-bottom: 1px solid var(--border); padding: 10px 11px; text-align: left; vertical-align: top; font-size: 13px; }
     th { position: sticky; top: 0; z-index: 1; background: #0d1117; color: var(--muted); font: 700 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; cursor: pointer; }
     th.no-sort { cursor: default; }
+    tbody tr { transition: background .12s ease; }
     tr:hover td { background: #151a21; }
     tr.selected td { background: #132016; }
+    tr.selected td:first-child { box-shadow: inset 3px 0 var(--green); }
     .mono { font-family: var(--mono); }
     .rank { font: 700 13px var(--mono); color: var(--green); }
     .model { font-weight: 800; color: #fff; }
     .official { font: 11px var(--mono); color: var(--faint); margin-top: 2px; }
-    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 7px; border: 1px solid var(--border); background: var(--chip); color: var(--muted); font: 700 11px var(--mono); margin: 0 4px 4px 0; white-space: nowrap; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 7px; border: 1px solid var(--border); border-radius: 999px; background: var(--chip); color: var(--muted); font: 700 11px var(--mono); margin: 0 4px 4px 0; white-space: nowrap; }
     .chip.good { color: #baf5ca; border-color: #245a35; background: #111e17; }
     .chip.warn { color: #f5d38a; border-color: #59431d; background: #1d170c; }
     .chip.bad { color: #ffb0aa; border-color: #62312d; background: #231213; }
@@ -108,30 +112,30 @@
     .rec-low { color: var(--red); font-weight: 800; }
 
     .split { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 14px; margin-top: 14px; }
-    .panel { border: 1px solid var(--border); background: var(--panel); padding: 14px; min-width: 0; }
+    .panel { border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); padding: 14px; min-width: 0; }
     .panel h3 { margin: 0 0 9px; font-size: 14px; letter-spacing: .03em; }
     .kv { display: grid; grid-template-columns: 145px 1fr; gap: 7px 12px; font-size: 13px; margin: 10px 0; }
     .kv div:nth-child(odd) { color: var(--faint); font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
     .detail-notes { display: grid; gap: 9px; margin-top: 12px; }
-    .note-card { border-left: 3px solid var(--border-2); background: #10151b; padding: 10px; font-size: 13px; color: var(--muted); }
+    .note-card { border-left: 3px solid var(--border-2); border-radius: 0 var(--radius) var(--radius) 0; background: #10151b; padding: 10px; font-size: 13px; color: var(--muted); }
     .note-card.good { border-left-color: var(--green); }
     .note-card.warn { border-left-color: var(--amber); }
     .note-card.bad { border-left-color: var(--red); }
 
     .evidence-list { display: grid; gap: 9px; }
-    .evidence { border: 1px solid var(--border); padding: 10px; background: #0e1217; }
+    .evidence { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; background: #0e1217; }
     .evidence .title { font-weight: 800; }
     .evidence .meta { color: var(--faint); font: 11px var(--mono); margin-top: 4px; }
     .evidence .claim { color: var(--muted); font-size: 13px; margin-top: 6px; }
 
     .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
-    .tab { padding: 8px 10px; border: 1px solid var(--border); color: var(--muted); background: #0f1318; font: 700 12px var(--mono); cursor: pointer; }
+    .tab { padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius); color: var(--muted); background: #0f1318; font: 700 12px var(--mono); cursor: pointer; }
     .tab.active { color: var(--green); border-color: #2f7444; background: #101d16; }
-    pre { margin: 0; overflow: auto; background: #050709; color: #d8e8f0; border: 1px solid var(--border); padding: 13px; font: 12px/1.5 var(--mono); }
+    pre { margin: 0; overflow: auto; background: #050709; color: #d8e8f0; border: 1px solid var(--border); border-radius: var(--radius); padding: 13px; font: 12px/1.5 var(--mono); }
     .copy { margin-top: 8px; }
 
     .matrix { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-    .engine { border: 1px solid var(--border); background: #10151b; padding: 12px; }
+    .engine { border: 1px solid var(--border); border-radius: var(--radius); background: #10151b; padding: 12px; }
     .engine h3 { margin: 0 0 6px; font-size: 14px; }
     .engine p { color: var(--muted); font-size: 13px; margin: 0; }
 
@@ -143,13 +147,6 @@
       .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .split { grid-template-columns: 1fr; }
       .matrix { grid-template-columns: 1fr; }
-    }
-    @media print {
-      aside, .tabs, .copy, button { display: none !important; }
-      body { background: white; color: black; }
-      main { padding: 0; }
-      .panel, .metric, .table-wrap, .banner { border-color: #999; background: white; box-shadow: none; }
-      th, td { color: black; background: white; }
     }
   </style>
 </head>
@@ -188,10 +185,7 @@
 
       <div class="side-section">
         <div class="side-title">Actions</div>
-        <div class="button-row">
-          <button id="printBtn">Print</button>
-          <button id="resetBtn">Reset</button>
-        </div>
+        <button class="full" id="resetBtn">Reset filters</button>
       </div>
 
       <div class="side-section">
@@ -208,7 +202,7 @@
         <div class="metric"><div class="k">Best measured</div><div class="v" id="bestMetric">52.7 tok/s</div><div class="note" id="bestMetricNote">Qwen3.6-35B-A3B FP8, vLLM</div></div>
       </section>
 
-      <div class="banner"><strong>Interpretation rule:</strong> every throughput entry below is either measured on DGX Spark or explicitly marked as an evidence gap. Dense models are evaluated against the 273 GB/s bandwidth ceiling, not just memory fit.</div>
+      <div class="banner"><strong>Interpretation rule:</strong> every throughput entry below is either measured on DGX Spark or explicitly marked as an evidence gap. Dense models are evaluated against the 273 GB/s bandwidth ceiling, not just memory fit. <span id="sourceBannerNote"></span></div>
 
       <div class="section-head">
         <div>
@@ -251,14 +245,10 @@
       <div class="section-head">
         <div>
           <h2>Inference Engine Recommendations</h2>
-          <p>Engine guidance is based on retrieved DGX Spark measurements and vendor support notes, not generic GPU assumptions.</p>
+          <p>Engine guidance is summarized from the active DGX Spark benchmark and recipe dataset.</p>
         </div>
       </div>
-      <section class="matrix">
-        <div class="engine"><h3>vLLM</h3><p>Primary choice for Qwen3.6-35B-A3B-FP8 and Qwen3.6-27B-FP8. Best measured Qwen3.6-35B-A3B result uses FP8 weights, FP8 KV cache, FlashInfer, prefix caching, and fast safetensors loading.</p></div>
-        <div class="engine"><h3>llama.cpp</h3><p>Primary choice for GLM-4.7-Flash GGUF. The strongest single-Spark GLM-4.7-Flash throughput report found is llama.cpp Q4_K_M, not vLLM or SGLang.</p></div>
-        <div class="engine"><h3>SGLang</h3><p>Supported by Qwen and GLM ecosystems, but no clean single-DGX-Spark SGLang tok/s table was found for these exact targets. Use only when workload-specific testing justifies it.</p></div>
-      </section>
+      <section class="matrix" id="engineMatrix"></section>
 
       <div class="section-head">
         <div>
@@ -282,14 +272,15 @@
         <ol id="rankedList"></ol>
       </section>
 
-      <div class="footer">
-        Sources are embedded as direct links in the evidence ledger. Last revised from the available public web results on 2026-05-05.
+      <div class="footer" id="dataFreshness">
+        Sources are embedded as direct links in the evidence ledger. Reference source: <a href="https://howtospark.com/" target="_blank" rel="noopener">HowToSpark</a>.
       </div>
     </main>
   </div>
 
+  <script src="data/howtospark-data.js"></script>
   <script>
-    const sources = {
+    const legacySources = {
       hwDocs: {
         title: 'NVIDIA DGX Spark User Guide: Hardware Overview',
         url: 'https://docs.nvidia.com/dgx/dgx-spark/hardware.html',
@@ -364,7 +355,7 @@
       }
     };
 
-    const models = [
+    const legacyModels = [
       {
         id: 'qwen35', rank: 1, name: 'Qwen3.6-35B-A3B', official: 'Qwen/Qwen3.6-35B-A3B-FP8', type: 'MoE', totalParams: '35B', activeParams: '3B active', context: '262K native', speedMax: 52.73, speedTypical: '≈52 tok/s', speedRange: '52.73 shallow; ~52 through 16K', engine: 'vLLM / FP8 / FP8 KV / FlashInfer', quality: 5, qualityLabel: 'Best coding-agent balance', recommendation: 'Highest', measured: true, multimodal: true, coding: true,
         strengths: ['Best overall measured balance', 'Strong official coding/agentic scores', 'Vision encoder and tool calling', 'Long-context native window'],
@@ -410,7 +401,57 @@ bash scripts/benchmark.sh`,
       }
     ];
 
-    const hardwareEvidence = ['hwDocs', 'nvidiaProduct', 'nngTable'];
+    function canonicalModelName(name) {
+      return name.toLowerCase()
+        .replace(/\([^)]*(?:poolside|unsloth|fast|uncensored)[^)]*\)/g, '')
+        .replace(/\b(?:nvfp4|fp8|bf16|gguf|awq|it)\b/g, '')
+        .replace(/[^a-z0-9]+/g, '');
+    }
+
+    function mergedData(externalData) {
+      if (!externalData?.models?.length) {
+        return { sources: legacySources, models: legacyModels, hardwareEvidence: ['hwDocs', 'nvidiaProduct', 'nngTable'], mode: 'legacy' };
+      }
+      if (externalData.mode === 'howtospark-only') {
+        return { sources: externalData.sources, models: externalData.models, hardwareEvidence: externalData.hardwareEvidence, mode: externalData.mode };
+      }
+
+      const usedLegacyIds = new Set();
+      const externalModels = externalData.models.map(external => {
+        const externalName = canonicalModelName(external.name);
+        const legacy = legacyModels.find(candidate => {
+          const legacyName = canonicalModelName(candidate.name);
+          return legacyName === externalName || legacyName.startsWith(externalName) || externalName.startsWith(legacyName);
+        });
+        if (!legacy) return external;
+        usedLegacyIds.add(legacy.id);
+        return {
+          ...legacy,
+          ...external,
+          id: legacy.id,
+          quality: legacy.quality,
+          coding: legacy.coding || external.coding,
+          multimodal: legacy.multimodal || external.multimodal,
+          strengths: [...new Set([...external.strengths, ...legacy.strengths])],
+          weaknesses: [...new Set([...external.weaknesses, ...legacy.weaknesses])],
+          sources: [...new Set([...external.sources, ...legacy.sources])]
+        };
+      });
+      const historical = legacyModels.filter(model => !usedLegacyIds.has(model.id));
+      const models = [...externalModels, ...historical].map((model, index) => ({ ...model, rank: index + 1 }));
+      return {
+        sources: { ...legacySources, ...externalData.sources },
+        models,
+        hardwareEvidence: [...new Set([...externalData.hardwareEvidence, 'hwDocs', 'nvidiaProduct', 'nngTable'])],
+        mode: externalData.mode
+      };
+    }
+
+    const sourceSnapshot = window.HOWTOSPARK_DATA;
+    const activeData = mergedData(sourceSnapshot);
+    const sources = activeData.sources;
+    const models = activeData.models;
+    const hardwareEvidence = activeData.hardwareEvidence;
     let sortKey = 'rank';
     let sortDir = 1;
     let selectedId = 'qwen35';
@@ -423,6 +464,7 @@ bash scripts/benchmark.sh`,
     const cmdTabs = document.getElementById('cmdTabs');
     const cmdBlock = document.getElementById('cmdBlock');
     const rankedList = document.getElementById('rankedList');
+    const engineMatrix = document.getElementById('engineMatrix');
 
     function recClass(rec) {
       if (rec === 'Highest' || rec.startsWith('High')) return 'rec-strong';
@@ -471,7 +513,7 @@ bash scripts/benchmark.sh`,
           <td><div class="speed">${m.speedTypical}</div><div class="range">${m.speedRange}</div><div class="bar"><span style="width:${Math.min(100, m.speedMax/60*100)}%"></span></div></td>
           <td><span class="chip ${m.quality >= 5 ? 'good' : m.quality >= 4 ? 'warn' : ''}">${m.quality}/5</span><br><span class="small">${m.qualityLabel}</span></td>
           <td><span class="mono">${m.engine}</span></td>
-          <td><span class="${recClass(m.recommendation)}">${m.recommendation}</span><br><span class="small">${m.verdict}</span></td>
+          <td><span class="${recClass(m.recommendation)}">${m.recommendation}</span></td>
         </tr>`).join('');
       rowCount.textContent = `${rows.length} model${rows.length === 1 ? '' : 's'} shown`;
       tbody.querySelectorAll('tr').forEach(tr => tr.addEventListener('click', () => {
@@ -499,7 +541,7 @@ bash scripts/benchmark.sh`,
         </div>
         <div class="detail-notes">
           <div class="note-card ${evidenceClass(m)}"><strong>Decision:</strong> ${m.verdict}</div>
-          <div class="note-card"><strong>Trade-off:</strong> ${m.type === 'MoE' ? 'MoE speed comes from low active parameters; verify task quality against your target workload.' : 'Dense models pay the full parameter-read cost on a 273 GB/s memory subsystem; fit does not imply fast decode.'}</div>
+          <div class="note-card"><strong>Trade-off:</strong> ${m.type === 'MoE' ? 'MoE speed comes from low active parameters; verify task quality against your target workload.' : m.type === 'Dense' ? 'Dense models pay the full parameter-read cost on a 273 GB/s memory subsystem; fit does not imply fast decode.' : 'Architecture details are not normalized yet; inspect the linked HowToSpark evidence before drawing memory-bandwidth conclusions.'}</div>
         </div>`;
     }
     function renderEvidence() {
@@ -520,6 +562,25 @@ bash scripts/benchmark.sh`,
       const ranked = [...models].sort((a,b) => a.rank - b.rank);
       rankedList.innerHTML = ranked.map(m => `<li><strong>${m.name}</strong> — ${m.verdict} <span class="small">Measured: ${m.speedTypical}; ${m.engine}.</span></li>`).join('');
     }
+    function renderEngines() {
+      const groups = new Map();
+      models.forEach(model => {
+        const label = /^vllm/i.test(model.engine) ? 'vLLM'
+          : /^llama\.cpp/i.test(model.engine) ? 'llama.cpp'
+            : /^sglang/i.test(model.engine) ? 'SGLang' : 'Recipe-specific';
+        const group = groups.get(label) || [];
+        group.push(model);
+        groups.set(label, group);
+      });
+      engineMatrix.innerHTML = [...groups.entries()].slice(0, 3).map(([label, entries]) => {
+        const measured = entries.filter(model => model.measured).sort((a,b) => b.speedMax - a.speedMax);
+        const best = measured[0];
+        const summary = best
+          ? `${entries.length} model${entries.length === 1 ? '' : 's'} in the active dataset. Best observed result: ${best.name} at ${best.speedTypical}.`
+          : `${entries.length} recipe${entries.length === 1 ? '' : 's'} in the active dataset; no normalized throughput result yet.`;
+        return `<div class="engine"><h3>${label}</h3><p>${summary}</p></div>`;
+      }).join('');
+    }
     function renderBestMetric() {
       const rows = filteredModels();
       const best = [...rows].sort((a,b) => b.speedMax - a.speedMax)[0];
@@ -529,7 +590,7 @@ bash scripts/benchmark.sh`,
       }
     }
     function renderAll() {
-      renderTable(); renderDetail(); renderEvidence(); renderCommands(); renderRankedList(); renderBestMetric();
+      renderTable(); renderDetail(); renderEvidence(); renderCommands(); renderRankedList(); renderEngines(); renderBestMetric();
     }
 
     document.querySelectorAll('th[data-key]').forEach(th => th.addEventListener('click', () => {
@@ -541,7 +602,6 @@ bash scripts/benchmark.sh`,
     document.getElementById('moeOnly').addEventListener('change', renderAll);
     document.getElementById('measuredOnly').addEventListener('change', renderAll);
     document.getElementById('hideLow').addEventListener('change', renderAll);
-    document.getElementById('printBtn').addEventListener('click', () => window.print());
     document.getElementById('resetBtn').addEventListener('click', () => {
       document.getElementById('search').value = '';
       document.getElementById('moeOnly').checked = false;
@@ -561,6 +621,20 @@ bash scripts/benchmark.sh`,
       try { await navigator.clipboard.writeText(cmdBlock.textContent); document.getElementById('copyBtn').textContent = 'Copied'; setTimeout(() => document.getElementById('copyBtn').textContent = 'Copy command', 1200); }
       catch { document.getElementById('copyBtn').textContent = 'Select + copy manually'; }
     });
+    if (sourceSnapshot) {
+      document.getElementById('sourceBannerNote').textContent = `Data sync: ${sourceSnapshot.latestBenchmarkCount} latest HowToSpark runs through ${sourceSnapshot.latestBenchmarkDate}; ${sourceSnapshot.mode} mode.`;
+      const freshness = document.getElementById('dataFreshness');
+      const sourceLink = document.createElement('a');
+      sourceLink.href = sourceSnapshot.sourceUrl;
+      sourceLink.target = '_blank';
+      sourceLink.rel = 'noopener';
+      sourceLink.textContent = 'HowToSpark';
+      freshness.replaceChildren(
+        document.createTextNode(`Benchmark and recipe data synchronized through ${sourceSnapshot.latestBenchmarkDate}. Sources are linked in the evidence ledger. Reference source: `),
+        sourceLink,
+        document.createTextNode(`. Source mode: ${sourceSnapshot.mode}.`)
+      );
+    }
     renderAll();
   </script>
 </body>

@@ -1,0 +1,13 @@
+{
+  "name": "spark-inference",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "update:data": "node scripts/update-howtospark.mjs",
+    "check:data": "node scripts/update-howtospark.mjs --check",
+    "test": "node scripts/validate-site.mjs"
+  },
+  "dependencies": {
+    "cheerio": "1.1.2"
+  }
+}

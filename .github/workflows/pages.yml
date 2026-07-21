@@ -31,6 +31,7 @@ jobs:
         run: |
           mkdir _site
           cp index.html _site/index.html
+          cp -R data _site/data
           cp .nojekyll _site/.nojekyll
 
       - name: Upload artifact
