@@ -87,7 +87,7 @@
     .small { color: var(--muted); font-size: 12px; }
 
     .table-wrap { overflow: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel-3); }
-    table { width: 100%; border-collapse: collapse; min-width: 1060px; }
+    table { width: 100%; border-collapse: collapse; min-width: 1160px; }
     th, td { border-bottom: 1px solid var(--border); padding: 10px 11px; text-align: left; vertical-align: top; font-size: 13px; }
     th { position: sticky; top: 0; z-index: 1; background: #0d1117; color: var(--muted); font: 700 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; cursor: pointer; }
     th.no-sort { cursor: default; }
@@ -95,6 +95,10 @@
     tr:hover td { background: #151a21; }
     tr.selected td { background: #132016; }
     tr.selected td:first-child { box-shadow: inset 3px 0 var(--green); }
+    tr.multi-spark td { background: #21150a; border-bottom-color: #5c3519; }
+    tr.multi-spark:hover td { background: #2b1a0a; }
+    tr.multi-spark td:first-child { box-shadow: inset 4px 0 var(--amber); }
+    tr.multi-spark.selected td:first-child { box-shadow: inset 4px 0 var(--red); }
     .mono { font-family: var(--mono); }
     .rank { font: 700 13px var(--mono); color: var(--green); }
     .model { font-weight: 800; color: #fff; }
@@ -107,6 +111,8 @@
     .chip.good { color: #baf5ca; border-color: #245a35; background: #111e17; }
     .chip.warn { color: #f5d38a; border-color: #59431d; background: #1d170c; }
     .chip.bad { color: #ffb0aa; border-color: #62312d; background: #231213; }
+    .chip.spark-count { font-size: 12px; padding: 5px 8px; }
+    .chip.spark-count.multi { color: #ffd39a; border-color: #a55e21; background: #2b1709; box-shadow: 0 0 0 1px rgba(255, 116, 110, .24); }
     .speed { font: 800 18px/1.1 var(--mono); color: var(--green); }
     .range { color: var(--muted); font: 12px var(--mono); margin-top: 3px; }
     .bar { height: 6px; background: #222a34; margin-top: 8px; width: 130px; }
@@ -125,6 +131,11 @@
     .note-card.good { border-left-color: var(--green); }
     .note-card.warn { border-left-color: var(--amber); }
     .note-card.bad { border-left-color: var(--red); }
+    .note-card.multi-spark-warning { border: 1px solid #8a4d20; border-left: 4px solid var(--red); background: #251208; color: #ffd2a3; }
+
+    .multi-spark-notice { border: 1px solid #8a4d20; border-radius: var(--radius); background: #251208; padding: 12px 14px; color: #ffd2a3; font-size: 13px; margin-bottom: 18px; }
+    .multi-spark-notice strong { color: #ff9b72; }
+    .multi-spark-notice[hidden] { display: none; }
 
     .evidence-list { display: grid; gap: 9px; }
     .evidence { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; background: #0e1217; }
@@ -182,6 +193,14 @@
 
       <div class="side-section">
         <div class="side-title">Filters</div>
+        <div class="control" style="margin-bottom: 12px;">
+          <label class="small" for="sparkCountFilter">DGX Spark systems</label>
+          <select id="sparkCountFilter">
+            <option value="single" selected>1 Spark only (default)</option>
+            <option value="all">All configurations</option>
+            <option value="multi">2+ Sparks only</option>
+          </select>
+        </div>
         <label class="check"><input type="checkbox" id="moeOnly" /> MoE only</label>
         <label class="check"><input type="checkbox" id="measuredOnly" checked /> measured DGX Spark numbers only</label>
         <label class="check"><input type="checkbox" id="hideLow" /> hide weak recommendations</label>
@@ -207,6 +226,7 @@
       </section>
 
       <div class="banner"><strong>Interpretation rule:</strong> every throughput entry below is either measured on DGX Spark or explicitly marked as an evidence gap. Dense models are evaluated against the 273 GB/s bandwidth ceiling, not just memory fit. <span id="sourceBannerNote"></span></div>
+      <div class="multi-spark-notice" id="multiSparkNotice" role="alert" hidden></div>
 
       <div class="section-head">
         <div>
@@ -227,6 +247,7 @@
               <th data-key="speedMax">Measured DGX Spark Speed</th>
               <th data-key="quality">Quality Score</th>
               <th data-key="engine">Engine / Quant</th>
+              <th data-key="nodes">DGX Sparks</th>
               <th data-key="recommendation">Recommendation</th>
             </tr>
           </thead>
@@ -412,6 +433,13 @@ bash scripts/benchmark.sh`,
         .replace(/[^a-z0-9]+/g, '');
     }
 
+    function modelNodeCount(model) {
+      if (Number.isInteger(model.nodes) && model.nodes > 0) return model.nodes;
+      const text = `${model.engine || ''} ${(model.weaknesses || []).join(' ')}`;
+      const match = text.match(/\b(\d+)\s+(?:DGX\s+)?Sparks?\b/i);
+      return match ? Number(match[1]) : 1;
+    }
+
     function mergedData(externalData) {
       if (!externalData?.models?.length) {
         return { sources: legacySources, models: legacyModels, hardwareEvidence: ['hwDocs', 'nvidiaProduct', 'nngTable'], mode: 'legacy' };
@@ -454,7 +482,7 @@ bash scripts/benchmark.sh`,
     const sourceSnapshot = window.HOWTOSPARK_DATA;
     const activeData = mergedData(sourceSnapshot);
     const sources = activeData.sources;
-    const models = activeData.models;
+    const models = activeData.models.map(model => ({ ...model, nodes: modelNodeCount(model) }));
     const hardwareEvidence = activeData.hardwareEvidence;
     let sortKey = 'rank';
     let sortDir = 1;
@@ -491,12 +519,15 @@ bash scripts/benchmark.sh`,
     }
     function filteredModels() {
       const q = document.getElementById('search').value.trim().toLowerCase();
+      const sparkCount = document.getElementById('sparkCountFilter').value;
       const moeOnly = document.getElementById('moeOnly').checked;
       const measuredOnly = document.getElementById('measuredOnly').checked;
       const hideLow = document.getElementById('hideLow').checked;
       return models.filter(m => {
-        const hay = [m.name, m.official, m.type, m.engine, m.recommendation, m.qualityLabel, ...m.strengths, ...m.weaknesses].join(' ').toLowerCase();
+        const hay = [m.name, m.official, m.type, m.engine, `${m.nodes} sparks`, m.recommendation, m.qualityLabel, ...m.strengths, ...m.weaknesses].join(' ').toLowerCase();
         if (q && !hay.includes(q)) return false;
+        if (sparkCount === 'single' && m.nodes !== 1) return false;
+        if (sparkCount === 'multi' && m.nodes <= 1) return false;
         if (moeOnly && m.type !== 'MoE') return false;
         if (measuredOnly && !m.measured) return false;
         if (hideLow && m.recommendation === 'Medium-low') return false;
@@ -511,8 +542,9 @@ bash scripts/benchmark.sh`,
     }
     function renderTable() {
       const rows = filteredModels();
+      if (!rows.some(m => m.id === selectedId) && rows[0]) selectedId = rows[0].id;
       tbody.innerHTML = rows.map((m, idx) => `
-        <tr data-id="${m.id}" class="${m.id === selectedId ? 'selected' : ''}">
+        <tr data-id="${m.id}" class="${m.id === selectedId ? 'selected' : ''} ${m.nodes > 1 ? 'multi-spark' : ''}">
           <td><span class="rank">${objective === 'overall' ? m.rank : idx + 1}</span></td>
           <td><div class="model">${m.name}</div><div class="official">${m.official}</div><div class="model-links"><a class="model-detail-link" href="#detailPanel" data-select-model="${m.id}">View details ↓</a><a class="model-source-link" href="${howToSparkLink(m)}" target="_blank" rel="noopener">HowToSpark model ↗</a>${m.nvidiaModelCardUrl ? `<a class="model-card-link" href="${m.nvidiaModelCardUrl}" target="_blank" rel="noopener">NVIDIA model card ↗</a>` : ''}</div></td>
           <td><span class="chip ${m.type === 'MoE' ? 'good' : 'warn'}">${m.type}</span></td>
@@ -520,6 +552,7 @@ bash scripts/benchmark.sh`,
           <td><div class="speed">${m.speedTypical}</div><div class="range">${m.speedRange}</div><div class="bar"><span style="width:${Math.min(100, m.speedMax/60*100)}%"></span></div></td>
           <td><span class="chip ${m.quality >= 5 ? 'good' : m.quality >= 4 ? 'warn' : ''}">${m.quality}/5</span><br><span class="small">${m.qualityLabel}</span></td>
           <td><span class="mono">${m.engine}</span></td>
+          <td><span class="chip spark-count ${m.nodes > 1 ? 'multi' : 'good'}">${m.nodes} Spark${m.nodes === 1 ? '' : 's'}</span></td>
           <td><span class="${recClass(m.recommendation)}">${m.recommendation}</span></td>
         </tr>`).join('');
       rowCount.textContent = `${rows.length} model${rows.length === 1 ? '' : 's'} shown`;
@@ -534,18 +567,22 @@ bash scripts/benchmark.sh`,
         selectedId = tr.dataset.id;
         renderAll();
       }));
-      if (!rows.find(m => m.id === selectedId) && rows[0]) selectedId = rows[0].id;
     }
     function renderDetail() {
-      const m = models.find(x => x.id === selectedId) || models[0];
+      const m = filteredModels().find(x => x.id === selectedId);
+      if (!m) {
+        detailContent.innerHTML = '<p class="small">No model matches the active filters.</p>';
+        return;
+      }
       detailContent.innerHTML = `
-        <h3>${m.name}</h3>
+        <h3>${m.name} <span class="chip spark-count ${m.nodes > 1 ? 'multi' : 'good'}">${m.nodes} Spark${m.nodes === 1 ? '' : 's'}</span></h3>
         <div class="kv">
           <div>Official</div><div>${m.official} · <a href="${howToSparkLink(m)}" target="_blank" rel="noopener">HowToSpark model ↗</a>${m.nvidiaModelCardUrl ? ` · <a href="${m.nvidiaModelCardUrl}" target="_blank" rel="noopener">NVIDIA model card ↗</a>` : ''}</div>
           <div>Architecture</div><div>${m.type}</div>
           <div>Total params</div><div>${m.totalParams}</div>
           <div>Active params</div><div>${m.activeParams}</div>
           <div>Context</div><div>${m.context}</div>
+          <div>Hardware</div><div>${m.nodes} DGX Spark system${m.nodes === 1 ? '' : 's'}</div>
           <div>Measured speed</div><div><strong>${m.speedTypical}</strong> <span class="small">(${m.speedRange})</span></div>
           <div>Engine path</div><div>${m.engine}</div>
         </div>
@@ -554,12 +591,17 @@ bash scripts/benchmark.sh`,
           ${m.weaknesses.map(w => `<span class="chip warn">− ${w}</span>`).join('')}
         </div>
         <div class="detail-notes">
+          ${m.nodes > 1 ? `<div class="note-card multi-spark-warning"><strong>Multi-system requirement:</strong> This result needs ${m.nodes} DGX Spark systems and is not a single-Spark inference result.</div>` : ''}
           <div class="note-card ${evidenceClass(m)}"><strong>Decision:</strong> ${m.verdict}</div>
           <div class="note-card"><strong>Trade-off:</strong> ${m.type === 'MoE' ? 'MoE speed comes from low active parameters; verify task quality against your target workload.' : m.type === 'Dense' ? 'Dense models pay the full parameter-read cost on a 273 GB/s memory subsystem; fit does not imply fast decode.' : 'Architecture details are not normalized yet; inspect the linked HowToSpark evidence before drawing memory-bandwidth conclusions.'}</div>
         </div>`;
     }
     function renderEvidence() {
-      const m = models.find(x => x.id === selectedId) || models[0];
+      const m = filteredModels().find(x => x.id === selectedId);
+      if (!m) {
+        evidenceList.innerHTML = '<p class="small">No evidence to show for the active filters.</p>';
+        return;
+      }
       const ids = [...hardwareEvidence, ...m.sources];
       evidenceList.innerHTML = ids.map(id => {
         const s = sources[id];
@@ -567,18 +609,21 @@ bash scripts/benchmark.sh`,
       }).join('');
     }
     function renderCommands() {
-      cmdTabs.innerHTML = models.map(m => `<button class="tab ${m.id === selectedId ? 'active' : ''}" data-id="${m.id}">${m.name}</button>`).join('');
-      const m = models.find(x => x.id === selectedId) || models[0];
-      cmdBlock.textContent = m.command;
+      const visible = filteredModels();
+      cmdTabs.innerHTML = visible.map(m => `<button class="tab ${m.id === selectedId ? 'active' : ''}" data-id="${m.id}">${m.name}</button>`).join('');
+      const m = visible.find(x => x.id === selectedId);
+      cmdBlock.textContent = m?.command || '# No model matches the active filters.';
       cmdTabs.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => { selectedId = b.dataset.id; renderAll(); }));
     }
     function renderRankedList() {
-      const ranked = [...models].sort((a,b) => a.rank - b.rank);
-      rankedList.innerHTML = ranked.map(m => `<li><strong>${m.name}</strong> — ${m.verdict} <span class="small">Measured: ${m.speedTypical}; ${m.engine}.</span></li>`).join('');
+      const ranked = [...filteredModels()].sort((a,b) => a.rank - b.rank);
+      rankedList.innerHTML = ranked.length
+        ? ranked.map(m => `<li><strong>${m.name}</strong> — ${m.verdict} <span class="small">Measured: ${m.speedTypical}; ${m.engine}.</span></li>`).join('')
+        : '<li class="small">No models match the active filters.</li>';
     }
     function renderEngines() {
       const groups = new Map();
-      models.forEach(model => {
+      filteredModels().forEach(model => {
         const label = /^vllm/i.test(model.engine) ? 'vLLM'
           : /^llama\.cpp/i.test(model.engine) ? 'llama.cpp'
             : /^sglang/i.test(model.engine) ? 'SGLang' : 'Recipe-specific';
@@ -586,7 +631,7 @@ bash scripts/benchmark.sh`,
         group.push(model);
         groups.set(label, group);
       });
-      engineMatrix.innerHTML = [...groups.entries()].slice(0, 3).map(([label, entries]) => {
+      const cards = [...groups.entries()].slice(0, 3).map(([label, entries]) => {
         const measured = entries.filter(model => model.measured).sort((a,b) => b.speedMax - a.speedMax);
         const best = measured[0];
         const summary = best
@@ -594,6 +639,7 @@ bash scripts/benchmark.sh`,
           : `${entries.length} recipe${entries.length === 1 ? '' : 's'} in the active dataset; no normalized throughput result yet.`;
         return `<div class="engine"><h3>${label}</h3><p>${summary}</p></div>`;
       }).join('');
+      engineMatrix.innerHTML = cards || '<p class="small">No engines match the active filters.</p>';
     }
     function renderBestMetric() {
       const rows = filteredModels();
@@ -601,10 +647,21 @@ bash scripts/benchmark.sh`,
       if (best) {
         document.getElementById('bestMetric').textContent = best.speedTypical;
         document.getElementById('bestMetricNote').textContent = `${best.name}, ${best.engine}`;
+      } else {
+        document.getElementById('bestMetric').textContent = '—';
+        document.getElementById('bestMetricNote').textContent = 'No models match active filters';
       }
     }
+    function renderMultiSparkNotice() {
+      const notice = document.getElementById('multiSparkNotice');
+      const multi = filteredModels().filter(model => model.nodes > 1);
+      notice.hidden = multi.length === 0;
+      notice.innerHTML = multi.length
+        ? `<strong>Multi-Spark results shown:</strong> ${multi.map(model => `${model.name} (${model.nodes})`).join(', ')}. These configurations require more than one DGX Spark and are highlighted below.`
+        : '';
+    }
     function renderAll() {
-      renderTable(); renderDetail(); renderEvidence(); renderCommands(); renderRankedList(); renderEngines(); renderBestMetric();
+      renderTable(); renderDetail(); renderEvidence(); renderCommands(); renderRankedList(); renderEngines(); renderBestMetric(); renderMultiSparkNotice();
     }
 
     document.querySelectorAll('th[data-key]').forEach(th => th.addEventListener('click', () => {
@@ -613,11 +670,13 @@ bash scripts/benchmark.sh`,
       renderAll();
     }));
     document.getElementById('search').addEventListener('input', renderAll);
+    document.getElementById('sparkCountFilter').addEventListener('change', renderAll);
     document.getElementById('moeOnly').addEventListener('change', renderAll);
     document.getElementById('measuredOnly').addEventListener('change', renderAll);
     document.getElementById('hideLow').addEventListener('change', renderAll);
     document.getElementById('resetBtn').addEventListener('click', () => {
       document.getElementById('search').value = '';
+      document.getElementById('sparkCountFilter').value = 'single';
       document.getElementById('moeOnly').checked = false;
       document.getElementById('measuredOnly').checked = true;
       document.getElementById('hideLow').checked = false;

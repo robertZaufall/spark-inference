@@ -53,6 +53,14 @@ function metricFromCard($, card, label) {
   return value;
 }
 
+function sparkCountFromText(value) {
+  const text = clean(value);
+  const numeric = text.match(/\b(\d+)\s+(?:DGX\s+)?Sparks?\b/i);
+  if (numeric) return Number(numeric[1]);
+  const word = text.match(/\b(one|two|three|four|five|six|seven|eight)\s+(?:DGX\s+)?Sparks?\b/i)?.[1]?.toLowerCase();
+  return word ? ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'].indexOf(word) + 1 : null;
+}
+
 function parseLatestBenchmarks(html) {
   const $ = cheerio.load(html);
   const heading = $('h2').filter((_, element) => clean($(element).text()) === 'Latest benchmarks').first();
@@ -133,7 +141,10 @@ function parseRecipeCards(html) {
       description: clean($card.find('p').first().text()),
       context: metricFromCard($, card, 'ctx'),
       speed: number(metricFromCard($, card, 'tok/s')),
-      nodes: number(metricFromCard($, card, 'Sparks')) || number(metricFromCard($, card, 'Spark')) || 1,
+      nodes: number(metricFromCard($, card, 'Sparks'))
+        || number(metricFromCard($, card, 'Spark'))
+        || sparkCountFromText(fullText)
+        || 1,
       via: viaMatch ? clean(viaMatch[1]) : null
     });
   });
@@ -243,6 +254,7 @@ function modelFromRecipe(recipe, matchingBenchmarks, goal, rank, command) {
       quality,
       qualityLabel: goal ? `HowToSpark: ${goal}` : 'HowToSpark measured recipe',
       recommendation,
+      nodes: recipe.nodes,
       measured: speedMax > 0,
       multimodal,
       coding,
@@ -264,6 +276,7 @@ function modelFromRecipe(recipe, matchingBenchmarks, goal, rank, command) {
 
 function modelFromBenchmarkGroup(slug, matchingBenchmarks, rank) {
   const first = matchingBenchmarks[0];
+  const bestRun = [...matchingBenchmarks].sort((a, b) => b.decodeTokensPerSecond - a.decodeTokensPerSecond)[0];
   const speeds = matchingBenchmarks.map((item) => item.decodeTokensPerSecond).filter(Number.isFinite);
   const speedMax = Math.max(...speeds);
   const min = Math.min(...speeds);
@@ -295,15 +308,20 @@ function modelFromBenchmarkGroup(slug, matchingBenchmarks, rank) {
       speedMax,
       speedTypical: `${speedMax} tok/s`,
       speedRange: range,
-      engine: `${first.engine}${first.engineVersion ? ` ${first.engineVersion}` : ''} / ${first.quantization} / ${first.nodes} Spark${first.nodes === 1 ? '' : 's'}`,
+      engine: `${bestRun.engine}${bestRun.engineVersion ? ` ${bestRun.engineVersion}` : ''} / ${bestRun.quantization} / ${bestRun.nodes} Spark${bestRun.nodes === 1 ? '' : 's'}`,
       quality: 3,
       qualityLabel: 'Latest HowToSpark benchmark',
       recommendation: 'Measured result',
+      nodes: bestRun.nodes,
       measured: true,
       multimodal: false,
       coding: false,
       strengths: ['Measured on DGX Spark hardware', 'Present in the latest benchmark feed'],
-      weaknesses: ['No HowToSpark recipe metadata is available yet', 'Task quality should be validated against your workload'],
+      weaknesses: [
+        'No HowToSpark recipe metadata is available yet',
+        'Task quality should be validated against your workload',
+        ...(bestRun.nodes > 1 ? [`Requires ${bestRun.nodes} DGX Sparks`] : [])
+      ],
       sources: [key],
       command: `# No recipe is published yet. Inspect the benchmark:\n# ${first.url}`,
       verdict: `Latest HowToSpark runs report ${range}.`

@@ -22,4 +22,6 @@ The updater refuses to overwrite the snapshot if the source exposes too few reci
 
 Once the external coverage is sufficient, change `mode` to `howtospark-only` and run `npm run update:data`. No renderer or workflow change is required.
 
+The workbench defaults to single-system inference with the `1 Spark only` hardware filter. Users can include all configurations or isolate `2+ Sparks`; multi-system results receive a distinct row highlight and an explicit hardware warning in the model detail view.
+
 The scheduled workflow runs daily and commits only when the normalized source data changed. A successful commit triggers the existing GitHub Pages deployment.

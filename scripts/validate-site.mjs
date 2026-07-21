@@ -21,6 +21,9 @@ data.models.forEach((model, index) => {
   ids.add(model.id);
   if (model.rank !== index + 1) throw new Error(`Non-sequential rank for ${model.id}`);
   if (!Number.isFinite(model.speedMax) || model.speedMax < 0 || model.speedMax > 1_000) throw new Error(`Invalid speed for ${model.id}`);
+  if (!Number.isInteger(model.nodes) || model.nodes < 1 || model.nodes > 8) {
+    throw new Error(`Invalid DGX Spark count for ${model.id}: ${model.nodes}`);
+  }
   if (!Array.isArray(model.sources) || !model.sources.every((source) => data.sources[source])) {
     throw new Error(`Missing evidence source for ${model.id}`);
   }
@@ -32,6 +35,8 @@ data.models.forEach((model, index) => {
     throw new Error(`Invalid HowToSpark model URL for ${model.id}`);
   }
 });
+if (!data.models.some((model) => model.nodes === 1)) throw new Error('Snapshot has no single-Spark models');
+if (!data.models.some((model) => model.nodes > 1)) throw new Error('Snapshot has no multi-Spark models');
 
 const html = await fs.readFile(path.join(root, 'index.html'), 'utf8');
 const $ = cheerio.load(html);
@@ -40,6 +45,11 @@ if (!html.includes('data-select-model')) throw new Error('index.html does not ex
 if (!html.includes("return m.howToSparkModelUrl || 'https://howtospark.com/models'")) {
   throw new Error('index.html does not guarantee a HowToSpark link on every model row');
 }
+if (!$('#sparkCountFilter option[value="single"][selected]').length) {
+  throw new Error('Single-Spark inference is not the default hardware filter');
+}
+if (!$('#multiSparkNotice[role="alert"]').length) throw new Error('Missing multi-Spark warning region');
+if (!html.includes("m.nodes > 1 ? 'multi-spark'")) throw new Error('Multi-Spark rows are not highlighted');
 $('script:not([src])').each((index, script) => {
   const source = $(script).html();
   if (source.trim()) new Function(source);
