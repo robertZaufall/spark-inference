@@ -154,7 +154,11 @@
     .engine h3 { margin: 0 0 6px; font-size: 14px; }
     .engine p { color: var(--muted); font-size: 13px; margin: 0; }
 
-    .footer { color: var(--faint); font-size: 12px; margin-top: 32px; border-top: 1px solid var(--border); padding-top: 16px; }
+    .site-footer { color: var(--faint); margin-top: 32px; padding-top: 14px; font: 11px/1.5 var(--mono); letter-spacing: .01em; }
+    .useful-links { display: flex; flex-wrap: wrap; align-items: center; text-align: left; }
+    .useful-links-label { color: var(--muted); margin-right: 12px; }
+    .footer-separator { color: #526071; margin: 0 10px; }
+    .footer-meta { color: #929cab; margin-top: 16px; text-align: center; }
 
     @media (max-width: 1150px) {
       .app { grid-template-columns: 1fr; }
@@ -297,12 +301,17 @@
         <ol id="rankedList"></ol>
       </section>
 
-      <div class="footer" id="dataFreshness">
-        Sources are embedded as direct links in the evidence ledger. Reference source: <a href="https://howtospark.com/" target="_blank" rel="noopener">HowToSpark</a>.
-      </div>
-      <div class="footer">
-        Additional model and inference information: <a href="https://github.com/MiaAI-Lab" target="_blank" rel="noopener">MiaAI-Lab on GitHub</a> · <a href="https://github.com/NVIDIA/dgx-spark-playbooks" target="_blank" rel="noopener">NVIDIA DGX Spark Playbooks</a>.
-      </div>
+      <footer class="site-footer">
+        <nav class="useful-links" aria-label="Useful links">
+          <span class="useful-links-label">Useful links:</span>
+          <a href="https://howtospark.com/" target="_blank" rel="noopener">howtospark.com</a>
+          <span class="footer-separator" aria-hidden="true">·</span>
+          <a href="https://github.com/MiaAI-Lab" target="_blank" rel="noopener">github.com/MiaAI-Lab</a>
+          <span class="footer-separator" aria-hidden="true">·</span>
+          <a href="https://github.com/NVIDIA/dgx-spark-playbooks" target="_blank" rel="noopener">github.com/NVIDIA/dgx-spark-playbooks</a>
+        </nav>
+        <div class="footer-meta">&copy; <span id="copyrightYear">2026</span> Robert Zaufall · Last updated: <time id="lastUpdated">2026-07-22</time></div>
+      </footer>
     </main>
   </div>
 
@@ -699,18 +708,15 @@ bash scripts/benchmark.sh`,
     });
     if (sourceSnapshot) {
       document.getElementById('sourceBannerNote').textContent = `Data sync: ${sourceSnapshot.latestBenchmarkCount} latest HowToSpark runs through ${sourceSnapshot.latestBenchmarkDate}; ${sourceSnapshot.mode} mode.`;
-      const freshness = document.getElementById('dataFreshness');
-      const sourceLink = document.createElement('a');
-      sourceLink.href = sourceSnapshot.sourceUrl;
-      sourceLink.target = '_blank';
-      sourceLink.rel = 'noopener';
-      sourceLink.textContent = 'HowToSpark';
-      freshness.replaceChildren(
-        document.createTextNode(`Benchmark and recipe data synchronized through ${sourceSnapshot.latestBenchmarkDate}. Sources are linked in the evidence ledger. Reference source: `),
-        sourceLink,
-        document.createTextNode(`. Source mode: ${sourceSnapshot.mode}.`)
-      );
     }
+    const pageModifiedAt = new Date(document.lastModified);
+    if (!Number.isNaN(pageModifiedAt.valueOf())) {
+      const padDatePart = value => String(value).padStart(2, '0');
+      const lastUpdated = document.getElementById('lastUpdated');
+      lastUpdated.textContent = `${pageModifiedAt.getFullYear()}-${padDatePart(pageModifiedAt.getMonth() + 1)}-${padDatePart(pageModifiedAt.getDate())} ${padDatePart(pageModifiedAt.getHours())}:${padDatePart(pageModifiedAt.getMinutes())}`;
+      lastUpdated.dateTime = pageModifiedAt.toISOString();
+    }
+    document.getElementById('copyrightYear').textContent = new Date().getFullYear();
     renderAll();
   </script>
 </body>

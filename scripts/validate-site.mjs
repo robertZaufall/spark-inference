@@ -52,6 +52,8 @@ if (!$('#multiSparkNotice[role="alert"]').length) throw new Error('Missing multi
 if (!html.includes("m.nodes > 1 ? 'multi-spark'")) throw new Error('Multi-Spark rows are not highlighted');
 if (!$('a[href="https://github.com/MiaAI-Lab"]').length) throw new Error('Missing MiaAI-Lab information link');
 if (!$('a[href="https://github.com/NVIDIA/dgx-spark-playbooks"]').length) throw new Error('Missing NVIDIA DGX Spark Playbooks link');
+if (!$('footer.site-footer nav.useful-links[aria-label="Useful links"]').length) throw new Error('Missing left-aligned useful-links footer');
+if (!$('#copyrightYear').length || !$('#lastUpdated').length) throw new Error('Missing centered copyright or update date');
 $('script:not([src])').each((index, script) => {
   const source = $(script).html();
   if (source.trim()) new Function(source);
