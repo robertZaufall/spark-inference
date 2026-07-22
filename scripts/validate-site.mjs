@@ -50,6 +50,7 @@ if (!$('#sparkCountFilter option[value="single"][selected]').length) {
 }
 if (!$('#multiSparkNotice[role="alert"]').length) throw new Error('Missing multi-Spark warning region');
 if (!html.includes("m.nodes > 1 ? 'multi-spark'")) throw new Error('Multi-Spark rows are not highlighted');
+if (!$('a[href="https://github.com/MiaAI-Lab"]').length) throw new Error('Missing MiaAI-Lab information link');
 $('script:not([src])').each((index, script) => {
   const source = $(script).html();
   if (source.trim()) new Function(source);
