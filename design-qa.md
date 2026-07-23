@@ -21,7 +21,7 @@ No additional crop is needed because the source visual is already a focused 1128
 - Spacing and layout rhythm: useful links sit on the first line; metadata is centered 16 px below; the component height matches the source crop after normalization.
 - Colors and visual tokens: muted gray labels and metadata, blue links, and the existing near-black page background match the reference while reusing site tokens.
 - Image quality and assets: the reference contains no images, logos, illustrations, or icons, so no replacement assets are required.
-- Copy and content: includes the requested Useful links label, all four current resources, `© 2026 Robert Zaufall`, and a dynamically derived last-updated timestamp.
+- Copy and content: includes the requested Useful links label, all five current resources, `© 2026 Robert Zaufall`, and a dynamically derived last-updated timestamp.
 
 ## Findings
 
@@ -34,7 +34,7 @@ No actionable P0, P1, or P2 differences remain.
 
 ## Interaction and runtime checks
 
-- Confirmed all four footer links expose their intended destinations.
+- Confirmed all five footer links expose their intended destinations.
 - Confirmed useful-links alignment computes to left and metadata alignment computes to center.
 - Confirmed the copyright year and deployed-page last-modified timestamp render dynamically.
 - Browser console errors: none.
