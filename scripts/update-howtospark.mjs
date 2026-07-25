@@ -3,6 +3,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import * as cheerio from 'cheerio';
+import { parseLatestBenchmarks } from './howtospark-parser.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const configPath = path.join(root, 'data-source.config.json');
@@ -59,57 +60,6 @@ function sparkCountFromText(value) {
   if (numeric) return Number(numeric[1]);
   const word = text.match(/\b(one|two|three|four|five|six|seven|eight)\s+(?:DGX\s+)?Sparks?\b/i)?.[1]?.toLowerCase();
   return word ? ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'].indexOf(word) + 1 : null;
-}
-
-function parseLatestBenchmarks(html) {
-  const $ = cheerio.load(html);
-  const heading = $('h2').filter((_, element) => clean($(element).text()) === 'Latest benchmarks').first();
-  if (!heading.length) throw new Error('Could not find the Latest benchmarks section on HowToSpark');
-
-  const rows = heading.parent().next().children();
-  const benchmarks = [];
-  rows.each((_, row) => {
-    const $row = $(row);
-    const link = $row.find('h3 a[href^="/benchmarks/"]').first();
-    const href = link.attr('href');
-    if (!href) return;
-
-    const directText = link.contents().filter((__, node) => node.type === 'text').first().text();
-    const badges = $row.find('[data-slot="badge"]').map((__, badge) => clean($(badge).text())).get();
-    const metricCells = $row.children().first().children();
-    const metrics = {};
-    metricCells.each((__, cell) => {
-      const values = $(cell).find('span').map((___, span) => clean($(span).text())).get();
-      if (values.length >= 2) metrics[values[1]] = values[0];
-    });
-
-    const dateLabel = clean($row.find('.mt-2 > span').first().text());
-    const date = new Date(`${dateLabel} 00:00:00 UTC`);
-    const benchmarkSlug = href.slice('/benchmarks/'.length).split('--dgx-spark-')[0];
-    const nodeMatch = href.match(/--dgx-spark-x(\d+)--/);
-    const quantization = clean(link.find('span').first().text());
-    const engineParts = (badges[0] || '').split(' ');
-
-    benchmarks.push({
-      id: href.split('--').at(-1),
-      slug: benchmarkSlug,
-      name: clean(directText),
-      url: absoluteUrl(href),
-      date: Number.isNaN(date.valueOf()) ? null : date.toISOString(),
-      decodeTokensPerSecond: number(metrics['tok/s']),
-      timeToFirstToken: metrics.ttft || null,
-      prefillTokensPerSecond: metrics.prefill || null,
-      quantization,
-      engine: engineParts.shift() || 'Unknown',
-      engineVersion: engineParts.join(' ') || null,
-      method: badges[1] || null,
-      context: (badges.find((badge) => badge.startsWith('ctx ')) || '').replace(/^ctx\s+/, '') || null,
-      nodes: nodeMatch ? Number(nodeMatch[1]) : 1
-    });
-  });
-
-  if (!benchmarks.length) throw new Error('HowToSpark returned no latest benchmark rows');
-  return benchmarks;
 }
 
 function parseCuratedGoals(html) {
@@ -330,7 +280,7 @@ function modelFromBenchmarkGroup(slug, matchingBenchmarks, rank) {
 }
 
 const [homeHtml, recipesHtml] = await Promise.all([fetchPage('/'), fetchPage('/recipes')]);
-const benchmarks = parseLatestBenchmarks(homeHtml);
+const benchmarks = parseLatestBenchmarks(homeHtml, sourceUrl);
 const goals = parseCuratedGoals(homeHtml);
 const recipes = parseRecipeCards(recipesHtml);
 
