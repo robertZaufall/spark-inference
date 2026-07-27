@@ -3,6 +3,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import * as cheerio from 'cheerio';
+import { fetchTextWithRetry, mapWithConcurrency } from './howtospark-fetch.mjs';
 import { parseLatestBenchmarks } from './howtospark-parser.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -32,15 +33,12 @@ function absoluteUrl(relative) {
 
 async function fetchPage(relative = '/') {
   const url = absoluteUrl(relative);
-  const response = await fetch(url, {
-    headers: {
-      accept: 'text/html,application/xhtml+xml',
-      'user-agent': 'spark-inference-data-sync/1.0 (+https://github.com/robertzaufall/spark-inference)'
-    },
-    signal: AbortSignal.timeout(30_000)
+  return fetchTextWithRetry(url, {
+    onRetry: ({ attempt, attempts, delayMs, error }) => {
+      const reason = error?.cause?.code || error?.code || error?.message || error?.name;
+      console.warn(`Retrying ${url} after ${reason} (attempt ${attempt + 1}/${attempts}, wait ${delayMs}ms)`);
+    }
   });
-  if (!response.ok) throw new Error(`${url} returned HTTP ${response.status}`);
-  return response.text();
 }
 
 function metricFromCard($, card, label) {
@@ -315,7 +313,11 @@ const recipeOrder = [...recipes].sort((a, b) => {
     || recipes.indexOf(a) - recipes.indexOf(b);
 });
 
-const detailPages = await Promise.all(recipeOrder.map((recipe) => fetchPage(new URL(recipe.url).pathname)));
+const detailPages = await mapWithConcurrency(
+  recipeOrder,
+  4,
+  (recipe) => fetchPage(new URL(recipe.url).pathname)
+);
 const normalized = [];
 const coveredBenchmarkSlugs = new Set();
 recipeOrder.forEach((recipe, index) => {

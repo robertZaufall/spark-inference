@@ -11,7 +11,7 @@ npm run update:data
 
 The updater reads HowToSpark's rendered home, recipe index, and recipe pages, then writes `data/howtospark-data.js`. It deliberately uses deterministic parsing and validation rather than an LLM: updates remain reproducible, require no secret, and produce reviewable diffs.
 
-The updater refuses to overwrite the snapshot if the source exposes too few recipes, no latest benchmark rows, or data older than the configured freshness limit. The committed snapshot means a temporary source outage cannot break the deployed site.
+The updater retries transient connection failures and retryable HTTP responses with bounded backoff, and limits concurrent recipe-page requests. It still refuses to overwrite the snapshot if the source exposes too few recipes, no latest benchmark rows, or data older than the configured freshness limit. The committed snapshot means a temporary source outage cannot break the deployed site.
 
 ## Transition strategy
 
