@@ -19,8 +19,8 @@ window.HOWTOSPARK_DATA = {
     "howtospark_kat_coder_v2_5_nvfp4": {
       "title": "HowToSpark recipe: KAT-Coder V2.5-Dev NVFP4",
       "url": "https://howtospark.com/recipes/kat-coder-v2-5-nvfp4",
-      "date": "Latest run 2026-07-24",
-      "claim": "Kwaipilot's agentic-coding KAT-Coder V2.5-Dev (35B MoE, ~3B active) in full NVFP4 on one DGX Spark, serving the full 262,144-token context at 82 tok/s single-stream decode — a 27% gain over the same config with no draft, from grafting Qwen3.6-35B-A3B's multi-token-prediction head into a checkpoint that shipped without one. Speculative decoding is verified, so the draft costs nothing in output quality, and the whole working set is 38 of 114 usable GiB. Latest normalized throughput: 39.2–55.3 tok/s across 2 latest runs; 2026-07-24."
+      "date": "Latest run 2026-07-25",
+      "claim": "Kwaipilot's agentic-coding KAT-Coder V2.5-Dev (35B MoE, ~3B active) in full NVFP4 on one DGX Spark, serving the full 262,144-token context at 82 tok/s single-stream decode — a 27% gain over the same config with no draft, from grafting Qwen3.6-35B-A3B's multi-token-prediction head into a checkpoint that shipped without one. Speculative decoding is verified, so the draft costs nothing in output quality, and the whole working set is 38 of 114 usable GiB. Latest normalized throughput: 39.2–55.3 tok/s across 2 latest runs; 2026-07-25."
     },
     "howtospark_qwen3_6_35b_a3b_nvfp4_fast": {
       "title": "HowToSpark recipe: Qwen3.6 35B-A3B NVFP4 (Unsloth Fast)",
@@ -92,7 +92,7 @@ window.HOWTOSPARK_DATA = {
       "context": "256K",
       "speedMax": 81.9,
       "speedTypical": "81.9 tok/s",
-      "speedRange": "39.2–55.3 tok/s across 2 latest runs; 2026-07-24",
+      "speedRange": "39.2–55.3 tok/s across 2 latest runs; 2026-07-25",
       "engine": "vLLM 0.24.0 / NVFP4 / 1 Spark",
       "quality": 4,
       "qualityLabel": "HowToSpark: KAT-Coder V2.5-Dev NVFP4",
