@@ -31,8 +31,8 @@ data.models.forEach((model, index) => {
   if (model.nvidiaModelCardUrl && !/^https:\/\/build\.nvidia\.com\/.+\/modelcard$/.test(model.nvidiaModelCardUrl)) {
     throw new Error(`Invalid NVIDIA model-card URL for ${model.id}`);
   }
-  if (model.howToSparkModelUrl && !/^https:\/\/howtospark\.com\/models\/.+/.test(model.howToSparkModelUrl)) {
-    throw new Error(`Invalid HowToSpark model URL for ${model.id}`);
+  if (!/^https:\/\/howtospark\.com\/(?:models|recipes)\/.+/.test(model.howToSparkModelUrl || '')) {
+    throw new Error(`Missing or invalid HowToSpark detail URL for ${model.id}`);
   }
 });
 if (!data.models.some((model) => model.nodes === 1)) throw new Error('Snapshot has no single-Spark models');

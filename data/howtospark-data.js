@@ -3,9 +3,9 @@ window.HOWTOSPARK_DATA = {
   "schemaVersion": 1,
   "mode": "transition",
   "sourceUrl": "https://howtospark.com/",
-  "generatedAt": "2026-07-25T00:00:00.000Z",
+  "generatedAt": "2026-07-26T00:00:00.000Z",
   "latestBenchmarkCount": 10,
-  "latestBenchmarkDate": "2026-07-25",
+  "latestBenchmarkDate": "2026-07-26",
   "hardwareEvidence": [
     "howtospark_hardware"
   ],
@@ -13,50 +13,74 @@ window.HOWTOSPARK_DATA = {
     "howtospark_hardware": {
       "title": "HowToSpark: NVIDIA DGX Spark hardware summary",
       "url": "https://howtospark.com/",
-      "date": "Snapshot 2026-07-25",
+      "date": "Snapshot 2026-07-26",
       "claim": "HowToSpark identifies the benchmark hardware as NVIDIA DGX Spark with 128 GB unified LPDDR5x and 273 GB/s bandwidth."
     },
     "howtospark_kat_coder_v2_5_nvfp4": {
       "title": "HowToSpark recipe: KAT-Coder V2.5-Dev NVFP4",
       "url": "https://howtospark.com/recipes/kat-coder-v2-5-nvfp4",
-      "date": "Latest run 2026-07-25",
-      "claim": "Kwaipilot's agentic-coding KAT-Coder V2.5-Dev (35B MoE, ~3B active) in full NVFP4 on one DGX Spark, serving the full 262,144-token context at 82 tok/s single-stream decode — a 27% gain over the same config with no draft, from grafting Qwen3.6-35B-A3B's multi-token-prediction head into a checkpoint that shipped without one. Speculative decoding is verified, so the draft costs nothing in output quality, and the whole working set is 38 of 114 usable GiB. Latest normalized throughput: 39.2–55.3 tok/s across 2 latest runs; 2026-07-25."
+      "date": "Current recipe snapshot",
+      "claim": "Kwaipilot's agentic-coding KAT-Coder V2.5-Dev (35B MoE, ~3B active) in full NVFP4 on one DGX Spark, serving the full 262,144-token context at 82 tok/s single-stream decode — a 27% gain over the same config with no draft, from grafting Qwen3.6-35B-A3B's multi-token-prediction head into a checkpoint that shipped without one. Speculative decoding is verified, so the draft costs nothing in output quality, and the whole working set is 38 of 114 usable GiB. Latest normalized throughput: 81.9 tok/s recipe result."
     },
     "howtospark_qwen3_6_35b_a3b_nvfp4_fast": {
       "title": "HowToSpark recipe: Qwen3.6 35B-A3B NVFP4 (Unsloth Fast)",
       "url": "https://howtospark.com/recipes/qwen3-6-35b-a3b-nvfp4-fast",
-      "date": "Latest run 2026-07-25",
-      "claim": "Serve the full 262,144-token context of Qwen3.6 35B-A3B on ONE DGX Spark at 106 tok/s single-stream, using the checkpoint's own MTP head for speculative decode at k=3 — a 57% gain over the same config with no draft. Nothing needs patching and nothing is tight: the whole working set is 36 of 114 usable GiB. Latest normalized throughput: 75.8–88.4 tok/s across 4 latest runs; 2026-07-25."
+      "date": "Current recipe snapshot",
+      "claim": "Serve the full 262,144-token context of Qwen3.6 35B-A3B on ONE DGX Spark at 106 tok/s single-stream, using the checkpoint's own MTP head for speculative decode at k=3 — a 57% gain over the same config with no draft. Nothing needs patching and nothing is tight: the whole working set is 36 of 114 usable GiB. Latest normalized throughput: 106.5 tok/s recipe result."
     },
     "howtospark_laguna_xs_2_1_nvfp4": {
       "title": "HowToSpark recipe: Laguna-XS 2.1 NVFP4",
       "url": "https://howtospark.com/recipes/laguna-xs-2-1-nvfp4",
       "date": "Current recipe snapshot",
-      "claim": "Serve poolside's agentic-coding Laguna-XS 2.1 (33B MoE, ~3B active) on one DGX Spark with the NVFP4 experts and the checkpoint's own DFlash speculator: 132 tok/s single-stream on code — 3.17x the no-draft baseline — with the full 262K context still fitting 1.5x over. Needs vLLM 0.25.1 (the release where the Laguna DFlash draft landed) and one non-obvious tuning call: k=6, not k=1. Latest normalized throughput: 132.18 tok/s recipe result."
+      "claim": "Serve poolside's agentic-coding Laguna-XS 2.1 (33B MoE, ~3B active) on one DGX Spark with the NVFP4 experts and a W4A16 Sparkulator quant of the checkpoint's own DFlash speculator: 133.6 tok/s single-stream on code — 3.2x the no-draft baseline — with the full 262K context still fitting 1.5x over. Needs vLLM 0.25.1 (the release where the Laguna DFlash draft landed) and two non-obvious tuning calls: k=6, not k=1, and --max-num-seqs 2, not 4. Latest normalized throughput: 133.55 tok/s recipe result."
+    },
+    "howtospark_qwen3_coder_next_nvfp4": {
+      "title": "HowToSpark recipe: Qwen3-Coder-Next NVFP4",
+      "url": "https://howtospark.com/recipes/qwen3-coder-next-nvfp4",
+      "date": "Current recipe snapshot",
+      "claim": "Qwen's agentic-coding Qwen3-Coder-Next (80B MoE, ~3B active) in NVFP4 on one DGX Spark, with a 1-layer EAGLE3 speculator — 72.0 tok/s single-stream, 1.18× the no-draft baseline, at the full 262,144-token context. Latest normalized throughput: 72 tok/s recipe result."
     },
     "howtospark_glm_5_2_dual_spark_tp2": {
       "title": "HowToSpark recipe: GLM-5.2 — 2-bit MoE",
       "url": "https://howtospark.com/recipes/glm-5-2-dual-spark-tp2",
       "date": "Current recipe snapshot",
-      "claim": "Run GLM-5.2 (753B MoE) across two DGX Sparks with vLLM-Moet's 2-bit expert kernels, expert-pruned planes, and NCCL-over-RoCE — ~15 tok/s single-stream, ~22 at 96K context with the fast build and its 4-bit speculator. Every number measured on real GB10 hardware. Latest normalized throughput: 21.6 tok/s recipe result."
+      "claim": "GLM-5.2 (753B MoE) in 2-bit experts + NVFP4 attention on two DGX Sparks (TP2), with a W4A16 dspark speculator at K=3 — 25.8 tok/s single-stream at 96K context. Latest normalized throughput: 25.79 tok/s recipe result."
     },
     "howtospark_deepseek_v4_flash_dspark_dual_spark_1m": {
       "title": "HowToSpark recipe: DeepSeek V4 Flash DSpark",
       "url": "https://howtospark.com/recipes/deepseek-v4-flash-dspark-dual-spark-1m",
-      "date": "Current recipe snapshot",
-      "claim": "Serve the 284B/13B DeepSeek V4 Flash DSpark checkpoint across two DGX Sparks at its full 1M-token context, with FP4 experts, an NVFP4 MLA KV cache, and DSpark speculative decoding holding decode speed flat out to 275K tokens. Latest normalized throughput: 44.2 tok/s recipe result."
+      "date": "Latest run 2026-07-26",
+      "claim": "Serve the 284B/13B DeepSeek V4 Flash DSpark checkpoint across two DGX Sparks at its full 1M-token context, with FP4 experts, an NVFP4 MLA KV cache, and DSpark speculative decoding at k=5 — 42.0 tok/s single-stream on prose and 76.0 on code. Latest normalized throughput: 42–43.1 tok/s across 2 latest runs; 2026-07-26."
     },
-    "howtospark_laguna_s_2_1_nvfp4_single_spark": {
-      "title": "HowToSpark recipe: Laguna-S 2.1 NVFP4",
-      "url": "https://howtospark.com/recipes/laguna-s-2-1-nvfp4-single-spark",
-      "date": "Latest run 2026-07-25",
-      "claim": "poolside's agentic-coding Laguna-S 2.1 (118B MoE, ~8B active) in NVFP4 on one DGX Spark, with the matching NVFP4 DFlash speculator — 42.9 tok/s single-stream (2.3x the no-draft baseline) at the full 262K context. Latest normalized throughput: 31–36.9 tok/s across 4 latest runs; 2026-07-25."
+    "howtospark_ornith_1_35b_bf16": {
+      "title": "HowToSpark recipe: Ornith 1.0 35B — BF16",
+      "url": "https://howtospark.com/recipes/ornith-1-35b-bf16",
+      "date": "Current recipe snapshot",
+      "claim": "Deep Reinforce's agentic-coding Ornith 1.0 35B (35B MoE, ~3B active) unquantized in BF16 on one DGX Spark, serving the full 262,144-token context at 30.3 tok/s single-stream. Latest normalized throughput: 30.3 tok/s recipe result."
+    },
+    "howtospark_qwen_agentworld_35b_a3b_bf16": {
+      "title": "HowToSpark recipe: Qwen AgentWorld 35B-A3B — BF16",
+      "url": "https://howtospark.com/recipes/qwen-agentworld-35b-a3b-bf16",
+      "date": "Current recipe snapshot",
+      "claim": "Qwen's agentic AgentWorld 35B-A3B (35B MoE, ~3B active) unquantized in BF16 on one DGX Spark, serving the full 262,144-token context at 30.4 tok/s single-stream. Latest normalized throughput: 30.4 tok/s recipe result."
+    },
+    "howtospark_qwen3_6_27b_nvfp4": {
+      "title": "HowToSpark recipe: Qwen3.6 27B NVFP4 (NVIDIA ModelOpt)",
+      "url": "https://howtospark.com/recipes/qwen3-6-27b-nvfp4",
+      "date": "Latest run 2026-07-26",
+      "claim": "Qwen3.6 27B — a dense 27B with hybrid GDN/full attention and a vision tower — in mixed NVFP4 on one DGX Spark, with the checkpoint's own MTP head speculating 5 tokens ahead: 31.8 tok/s single-stream, 2.6× the no-draft baseline, at the full 262,144-token context. Latest normalized throughput: 28.7–31.7 tok/s across 4 latest runs; 2026-07-26."
     },
     "howtospark_btl3_27b_bf16": {
       "title": "HowToSpark recipe: BTL-3 (Qwen3.6-27B) — BF16",
       "url": "https://howtospark.com/recipes/btl3-27b-bf16",
       "date": "Current recipe snapshot",
       "claim": "badtheorylabs' BTL-3 agentic coder (a LoRA on Qwen3.6-27B, ~27B dense) in BF16 on one DGX Spark, with the base model's native MTP head driving speculative decode — 12.8 tok/s single-stream, 2.9x the no-draft baseline, at the full 262K context. Latest normalized throughput: 12.81 tok/s recipe result."
+    },
+    "howtospark_laguna_s_2_1_nvfp4_single_spark": {
+      "title": "HowToSpark recipe: Laguna-S 2.1 NVFP4",
+      "url": "https://howtospark.com/recipes/laguna-s-2-1-nvfp4-single-spark",
+      "date": "Latest run 2026-07-25",
+      "claim": "poolside's agentic-coding Laguna-S 2.1 (118B MoE, ~8B active) in NVFP4 on one DGX Spark, with the matching NVFP4 DFlash speculator — 42.9 tok/s single-stream (2.3x the no-draft baseline) at the full 262K context. Latest normalized throughput: 31–36.9 tok/s across 4 latest runs; 2026-07-25."
     },
     "howtospark_hy3_nvfp4_dual_spark_tp2": {
       "title": "HowToSpark recipe: Hy3 NVFP4",
@@ -82,9 +106,9 @@ window.HOWTOSPARK_DATA = {
       "id": "howtospark-kat-coder-v2-5-nvfp4",
       "sourceSlug": "kat-coder-v2-5-nvfp4",
       "rank": 1,
-      "name": "KAT-Coder V2.5-Dev",
+      "name": "KAT-Coder V2.5-Dev NVFP4",
       "official": "sakamakismile/KAT-Coder-V2.5-Dev-NVFP4",
-      "howToSparkModelUrl": null,
+      "howToSparkModelUrl": "https://howtospark.com/recipes/kat-coder-v2-5-nvfp4",
       "nvidiaModelCardUrl": null,
       "type": "MoE",
       "totalParams": "35B",
@@ -92,8 +116,8 @@ window.HOWTOSPARK_DATA = {
       "context": "256K",
       "speedMax": 81.9,
       "speedTypical": "81.9 tok/s",
-      "speedRange": "39.2–55.3 tok/s across 2 latest runs; 2026-07-25",
-      "engine": "vLLM 0.24.0 / NVFP4 / 1 Spark",
+      "speedRange": "81.9 tok/s recipe result",
+      "engine": "NVFP4 / 1 Spark",
       "quality": 4,
       "qualityLabel": "HowToSpark: KAT-Coder V2.5-Dev NVFP4",
       "recommendation": "High — kat-coder v2.5-dev nvfp4",
@@ -119,7 +143,7 @@ window.HOWTOSPARK_DATA = {
       "id": "howtospark-qwen3-6-35b-a3b-nvfp4-fast",
       "sourceSlug": "qwen3-6-35b-a3b-nvfp4-fast",
       "rank": 2,
-      "name": "Qwen3.6 35B-A3B",
+      "name": "Qwen3.6 35B-A3B NVFP4 (Unsloth Fast)",
       "official": "unsloth/Qwen3.6-35B-A3B-NVFP4-Fast",
       "howToSparkModelUrl": "https://howtospark.com/models/qwen3-6-35b-a3b",
       "nvidiaModelCardUrl": null,
@@ -129,8 +153,8 @@ window.HOWTOSPARK_DATA = {
       "context": "256K",
       "speedMax": 106.5,
       "speedTypical": "106.5 tok/s",
-      "speedRange": "75.8–88.4 tok/s across 4 latest runs; 2026-07-25",
-      "engine": "vLLM 0.24.0 / NVFP4 / 1 Spark",
+      "speedRange": "106.5 tok/s recipe result",
+      "engine": "NVFP4 / 1 Spark",
       "quality": 5,
       "qualityLabel": "HowToSpark: Daily driver",
       "recommendation": "Highest",
@@ -164,9 +188,9 @@ window.HOWTOSPARK_DATA = {
       "totalParams": "33B",
       "activeParams": "3B active",
       "context": "256K",
-      "speedMax": 132.18,
-      "speedTypical": "132.18 tok/s",
-      "speedRange": "132.18 tok/s recipe result",
+      "speedMax": 133.55,
+      "speedTypical": "133.55 tok/s",
+      "speedRange": "133.55 tok/s recipe result",
       "engine": "NVFP4 / 1 Spark",
       "quality": 4.5,
       "qualityLabel": "HowToSpark: Coding",
@@ -186,13 +210,50 @@ window.HOWTOSPARK_DATA = {
       "sources": [
         "howtospark_laguna_xs_2_1_nvfp4"
       ],
-      "command": "systemd-run --user --scope --collect -p MemoryMax=100G -p MemorySwapMax=0 \\\n  env PATH=\"$HOME/venvs/vllm-025/bin:$PATH\" VLLM_USE_DEEP_GEMM=0 \\\n  vllm serve ~/models/hf/Laguna-XS-2.1-NVFP4 \\\n  --served-model-name laguna-nvfp4 \\\n  --max-model-len 262144 \\\n  --gpu-memory-utilization 0.5 \\\n  --kv-cache-memory-bytes 12884901888 \\\n  --max-num-seqs 2 \\\n  --max-num-batched-tokens 8192 \\\n  --speculative-config '{\"method\":\"dflash\",\"model\":\"'$HOME'/models/hf/Laguna-XS-2.1-DFlash\",\"num_speculative_tokens\":6}' \\\n  --host 0.0.0.0 --port 8000",
-      "verdict": "Serve poolside's agentic-coding Laguna-XS 2.1 (33B MoE, ~3B active) on one DGX Spark with the NVFP4 experts and the checkpoint's own DFlash speculator: 132 tok/s single-stream on code — 3.17x the no-draft baseline — with the full 262K context still fitting 1.5x over. Needs vLLM 0.25.1 (the release where the Laguna DFlash draft landed) and one non-obvious tuning call: k=6, not k=1."
+      "command": "systemd-run --user --scope --collect -p MemoryMax=100G -p MemorySwapMax=0 \\\n  env PATH=\"$HOME/venvs/vllm-025/bin:$PATH\" VLLM_USE_DEEP_GEMM=0 \\\n  vllm serve ~/models/hf/Laguna-XS-2.1-NVFP4 \\\n  --served-model-name laguna-nvfp4 \\\n  --max-model-len 262144 \\\n  --gpu-memory-utilization 0.5 \\\n  --kv-cache-memory-bytes 12884901888 \\\n  --max-num-seqs 2 \\\n  --max-num-batched-tokens 8192 \\\n  --speculative-config '{\"method\":\"dflash\",\"model\":\"'$HOME'/models/hf/Sparkulator-Laguna-XS-2.1\",\"num_speculative_tokens\":6}' \\\n  --host 0.0.0.0 --port 8000",
+      "verdict": "Serve poolside's agentic-coding Laguna-XS 2.1 (33B MoE, ~3B active) on one DGX Spark with the NVFP4 experts and a W4A16 Sparkulator quant of the checkpoint's own DFlash speculator: 133.6 tok/s single-stream on code — 3.2x the no-draft baseline — with the full 262K context still fitting 1.5x over. Needs vLLM 0.25.1 (the release where the Laguna DFlash draft landed) and two non-obvious tuning calls: k=6, not k=1, and --max-num-seqs 2, not 4."
+    },
+    {
+      "id": "howtospark-qwen3-coder-next-nvfp4",
+      "sourceSlug": "qwen3-coder-next-nvfp4",
+      "rank": 4,
+      "name": "Qwen3-Coder-Next NVFP4",
+      "official": "gdubicki/Qwen3-Coder-Next-NVFP4-GB10",
+      "howToSparkModelUrl": "https://howtospark.com/recipes/qwen3-coder-next-nvfp4",
+      "nvidiaModelCardUrl": null,
+      "type": "MoE",
+      "totalParams": "80B",
+      "activeParams": "3B active",
+      "context": "256K",
+      "speedMax": 72,
+      "speedTypical": "72 tok/s",
+      "speedRange": "72 tok/s recipe result",
+      "engine": "NVFP4 / 1 Spark",
+      "quality": 4.5,
+      "qualityLabel": "HowToSpark: Coding",
+      "recommendation": "High — coding",
+      "nodes": 1,
+      "measured": true,
+      "multimodal": false,
+      "coding": true,
+      "strengths": [
+        "HowToSpark coding pick",
+        "Measured on DGX Spark hardware",
+        "256K context recipe"
+      ],
+      "weaknesses": [
+        "Task quality should be validated against your workload"
+      ],
+      "sources": [
+        "howtospark_qwen3_coder_next_nvfp4"
+      ],
+      "command": "export PATH=\"$HOME/venvs/vllm/bin:$PATH\"\nexport VLLM_USE_DEEP_GEMM=0\nexport TORCHINDUCTOR_COMPILE_THREADS=2\nexport MAX_JOBS=4\n\nvllm serve ~/models/hf/Qwen3-Coder-Next-NVFP4-GB10 \\\n  --served-model-name Qwen/Qwen3-Coder-Next \\\n  --max-model-len 262144 \\\n  --kv-cache-memory-bytes 8589934592 \\\n  --gpu-memory-utilization 0.85 \\\n  --max-num-seqs 4 \\\n  --max-num-batched-tokens 8192 \\\n  --port 8000 \\\n  --speculative-config '{\"method\":\"eagle3\",\"model\":\"'$HOME'/models/hf/Aurora-Spec-Qwen3-Coder-Next-FP8\",\"num_speculative_tokens\":1}'",
+      "verdict": "Qwen's agentic-coding Qwen3-Coder-Next (80B MoE, ~3B active) in NVFP4 on one DGX Spark, with a 1-layer EAGLE3 speculator — 72.0 tok/s single-stream, 1.18× the no-draft baseline, at the full 262,144-token context."
     },
     {
       "id": "howtospark-glm-5-2-dual-spark-tp2",
       "sourceSlug": "glm-5-2-dual-spark-tp2",
-      "rank": 4,
+      "rank": 5,
       "name": "GLM-5.2",
       "official": "Sapid-Labs/vLLM-Moet (spark/RUNBOOK.md)",
       "howToSparkModelUrl": "https://howtospark.com/models/glm-5-2",
@@ -201,9 +262,9 @@ window.HOWTOSPARK_DATA = {
       "totalParams": "753B",
       "activeParams": "Not stated",
       "context": "96K",
-      "speedMax": 21.6,
-      "speedTypical": "21.6 tok/s",
-      "speedRange": "21.6 tok/s recipe result",
+      "speedMax": 25.79,
+      "speedTypical": "25.79 tok/s",
+      "speedRange": "25.79 tok/s recipe result",
       "engine": "recipe quantization / 2 Sparks",
       "quality": 4.5,
       "qualityLabel": "HowToSpark: Most capable",
@@ -224,14 +285,14 @@ window.HOWTOSPARK_DATA = {
       "sources": [
         "howtospark_glm_5_2_dual_spark_tp2"
       ],
-      "command": "hf download sapidlabs/Sparkulator-GLM-5.2 --local-dir ~/models/hf/Sparkulator-GLM-5.2   # both nodes\n~/Dev/vLLM-Moet/dspark-port/apply.sh ~/venvs/vllm-moet/lib/python3.12/site-packages/vllm  # both nodes\n\n~/Dev/vLLM-Moet/spark/start-ray-cluster.sh\nM=$HOME/models/hf/GLM-5.2-FP8\nDSPARK_K=2 MODEL=$M/nvfp4_big3_overlay \\\n  SPECULATOR=$HOME/models/hf/Sparkulator-GLM-5.2 \\\n  VLLM_MOE_W2_PREPACKED_DIR=$M/moe_w2_planes_tp2_p208_reap \\\n  VLLM_NVFP4_DENSE=1 VLLM_NVFP4_TARGETS=o_proj,q_b_proj,kv_b_proj \\\n  VLLM_ENGINE_READY_TIMEOUT_S=2400 VLLM_MOE_W2_FADVISE_GLOB= \\\n  ~/Dev/vLLM-Moet/spark/serve-glm52-tp2-dspark.sh --hf-overrides '{\"num_experts_per_tok\":4}' \\\n    --max-model-len 98304 --kv-cache-memory-bytes 10737418240",
-      "verdict": "Run GLM-5.2 (753B MoE) across two DGX Sparks with vLLM-Moet's 2-bit expert kernels, expert-pruned planes, and NCCL-over-RoCE — ~15 tok/s single-stream, ~22 at 96K context with the fast build and its 4-bit speculator. Every number measured on real GB10 hardware."
+      "command": "hf download sapidlabs/Sparkulator-GLM-5.2 --local-dir ~/models/hf/Sparkulator-GLM-5.2   # both nodes\n~/Dev/vLLM-Moet/dspark-port/apply.sh ~/venvs/vllm-moet/lib/python3.12/site-packages/vllm  # both nodes\n\n~/Dev/vLLM-Moet/spark/start-ray-cluster.sh\nM=$HOME/models/hf/GLM-5.2-FP8\nDSPARK_K=3 MODEL=$M/nvfp4_big3_overlay \\\n  SPECULATOR=$HOME/models/hf/Sparkulator-GLM-5.2 \\\n  VLLM_MOE_W2_PREPACKED_DIR=$M/moe_w2_planes_tp2_p208_reap \\\n  VLLM_NVFP4_DENSE=1 VLLM_NVFP4_TARGETS=o_proj,q_b_proj,kv_b_proj \\\n  VLLM_ENGINE_READY_TIMEOUT_S=2400 VLLM_MOE_W2_FADVISE_GLOB= \\\n  ~/Dev/vLLM-Moet/spark/serve-glm52-tp2-dspark.sh --hf-overrides '{\"num_experts_per_tok\":4}' \\\n    --max-model-len 98304 --kv-cache-memory-bytes 10737418240",
+      "verdict": "GLM-5.2 (753B MoE) in 2-bit experts + NVFP4 attention on two DGX Sparks (TP2), with a W4A16 dspark speculator at K=3 — 25.8 tok/s single-stream at 96K context."
     },
     {
       "id": "howtospark-deepseek-v4-flash-dspark-dual-spark-1m",
       "sourceSlug": "deepseek-v4-flash-dspark-dual-spark-1m",
-      "rank": 5,
-      "name": "DeepSeek V4 Flash DSpark",
+      "rank": 6,
+      "name": "DeepSeek V4 Flash DSpark (284B-A13B)FP4 experts + FP8 dense",
       "official": "See HowToSpark recipe",
       "howToSparkModelUrl": "https://howtospark.com/models/deepseek-v4-flash-dspark",
       "nvidiaModelCardUrl": "https://build.nvidia.com/deepseek-ai/deepseek-v4-flash/modelcard",
@@ -239,10 +300,10 @@ window.HOWTOSPARK_DATA = {
       "totalParams": "284B",
       "activeParams": "13B active",
       "context": "1M",
-      "speedMax": 44.2,
-      "speedTypical": "44.2 tok/s",
-      "speedRange": "44.2 tok/s recipe result",
-      "engine": "recipe quantization / 2 Sparks",
+      "speedMax": 43.1,
+      "speedTypical": "43.1 tok/s",
+      "speedRange": "42–43.1 tok/s across 2 latest runs; 2026-07-26",
+      "engine": "vLLM 0.25.2.dev0+g752a3a504 (ghcr.io/anemll/dspark-vllm-gx10:0.1.1) / FP4 / 2 Sparks",
       "quality": 4,
       "qualityLabel": "HowToSpark: Long context",
       "recommendation": "High — long context",
@@ -262,32 +323,106 @@ window.HOWTOSPARK_DATA = {
       "sources": [
         "howtospark_deepseek_v4_flash_dspark_dual_spark_1m"
       ],
-      "command": "cd ~/howtospark/deploy/deepseek-v4-flash-dspark\n./start.sh\n\n# watch the numbers that matter\ndocker logs -f ds4-flash-dspark 2>&1 \\\n  | grep -E 'Available KV cache|GPU KV cache size|Maximum concurrency|startup complete'",
-      "verdict": "Serve the 284B/13B DeepSeek V4 Flash DSpark checkpoint across two DGX Sparks at its full 1M-token context, with FP4 experts, an NVFP4 MLA KV cache, and DSpark speculative decoding holding decode speed flat out to 275K tokens."
+      "command": "# on BOTH nodes — identical path on each\nmkdir -p ~/dspark-v4-flash && cd ~/dspark-v4-flash\n\ncat > docker-compose.yml <<'COMPOSE'\n# DeepSeek V4 Flash DSpark — dual DGX Spark (TP=2, 1M context).\n# Launched by ./start.sh, which injects NODE_RANK, HEADLESS, VLLM_HOST_IP and\n# the per-node NCCL_IB_GID_INDEX. See README.md for why the image is pinned.\nservices:\n  vllm-dspark:\n    image: ${DSPARK_VLLM_IMAGE:-ghcr.io/anemll/dspark-vllm-gx10:0.1.1}\n    container_name: ds4-flash-dspark\n    pull_policy: if_not_present\n    entrypoint: []\n    network_mode: host\n    ipc: host\n    shm_size: \"64gb\"\n    restart: \"no\"\n\n    ulimits:\n      memlock: -1 # RDMA registration; without this NCCL silently falls back to TCP\n      stack: 67108864\n\n    gpus: all\n\n    devices:\n      - /dev/infiniband:/dev/infiniband\n\n    volumes:\n      - ${HF_CACHE:-${HOME}/.cache/huggingface}:/cache/huggingface\n      - ${DSPARK_TMP_HOST:-${HOME}/.cache/dspark-tmp}:/tmp\n\n    environment:\n      # ---- model + cache ------------------------------------------------\n      HF_HOME: /cache/huggingface\n      VLLM_CACHE_ROOT: /cache/huggingface/vllm-cache\n      # Default OFF so a first run can download. Flip to 1 once both nodes\n      # hold the full 48-shard tree, so a later run can never silently refetch.\n      HF_HUB_OFFLINE: \"${HF_HUB_OFFLINE:-0}\"\n      TRANSFORMERS_OFFLINE: \"${TRANSFORMERS_OFFLINE:-0}\"\n      HF_HUB_DISABLE_XET: \"1\"\n\n      # ---- distributed --------------------------------------------------\n      NODE_RANK: \"${NODE_RANK}\"\n      HEADLESS: \"${HEADLESS:-}\"\n      MASTER_ADDR: \"${MASTER_ADDR}\"\n      MASTER_PORT: \"${MASTER_PORT:-25000}\"\n      VLLM_HOST_IP: \"${VLLM_HOST_IP:-}\"\n\n      # ---- RoCE fabric ---------------------------------------------------\n      # NCCL_IB_GID_INDEX is injected per node by start.sh, which resolves it\n      # from sysfs at launch. It differs between nodes and drifts across\n      # reboots, so it is deliberately NOT defaulted here.\n      NCCL_NET: \"IB\"\n      NCCL_IB_DISABLE: \"0\"\n      NCCL_IB_HCA: \"${NCCL_IB_HCA:-rocep1s0f1}\"\n      NCCL_SOCKET_IFNAME: \"${NCCL_SOCKET_IFNAME:-enp1s0f1np1}\"\n      TP_SOCKET_IFNAME: \"${TP_SOCKET_IFNAME:-${NCCL_SOCKET_IFNAME:-enp1s0f1np1}}\"\n      GLOO_SOCKET_IFNAME: \"${GLOO_SOCKET_IFNAME:-${NCCL_SOCKET_IFNAME:-enp1s0f1np1}}\"\n      NCCL_IB_GID_INDEX: \"${NCCL_IB_GID_INDEX:?start.sh must resolve this per node}\"\n      NCCL_IB_ADDR_FAMILY: \"AF_INET\"\n      NCCL_IB_ROCE_VERSION_NUM: \"2\"\n      NCCL_CROSS_NIC: \"1\"\n      NCCL_CUMEM_ENABLE: \"0\"\n      NCCL_IGNORE_CPU_AFFINITY: \"1\"\n      NCCL_NVLS_ENABLE: \"0\"\n      NCCL_DEBUG: \"${NCCL_DEBUG:-WARN}\"\n\n      # ---- GB10 / sm_121 toolchain ---------------------------------------\n      TORCH_CUDA_ARCH_LIST: \"12.1a\"\n      FLASHINFER_CUDA_ARCH_LIST: \"12.1a\"\n      FLASHINFER_DISABLE_VERSION_CHECK: \"1\"\n      FLASHINFER_WORKSPACE_BASE: \"/cache/huggingface/flashinfer\"\n      DG_JIT_USE_NVRTC: \"0\"\n      DG_JIT_NVCC_COMPILER: \"/usr/local/cuda/bin/nvcc\"\n      TILELANG_CLEANUP_TEMP_FILES: \"1\"\n      PYTORCH_CUDA_ALLOC_CONF: \"expandable_segments:True\"\n\n      # ---- unified-memory behaviour --------------------------------------\n      VLLM_ALLOW_LONG_MAX_MODEL_LEN: \"1\"\n      VLLM_SKIP_INIT_MEMORY_CHECK: \"1\"\n      VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS: \"0\"\n      VLLM_TRITON_MLA_SPARSE: \"1\"\n      VLLM_SPARSE_INDEXER_MAX_LOGITS_MB: \"256\"\n\n      # ---- DSpark speculative decoding -----------------------------------\n      # Clamps stale draft-KV slot ids; required for stable long-context runs.\n      DSPARK_SLOT_CLAMP: \"1\"\n      VLLM_USE_FLASHINFER_SAMPLER: \"1\"\n      VLLM_DSPARK_LOCAL_ARGMAX: \"1\"\n      VLLM_DSPARK_REPLICATE_MARKOV_W1: \"1\"\n      VLLM_DSPARK_GPU_REJECTED_CONTEXT_MASK: \"1\"\n      VLLM_DSPARK_HARDWARE_SCHEDULER_EARLY_STOP: \"1\"\n      VLLM_DSPARK_CONFIDENCE_THRESHOLD: \"0.0\"\n      VLLM_DSPARK_CONFIDENCE_SCHEDULER: \"off\"\n\n      # ---- b12x FP4 MoE kernels (valid for THIS image only) --------------\n      VLLM_USE_B12X_MOE: \"1\"\n      VLLM_USE_B12X_WO_PROJECTION: \"1\"\n      VLLM_B12X_W4A16_FORCE_BLOCKS_MAX_M: \"16\"\n\n      MTP_NUM_TOKENS: \"${MTP_NUM_TOKENS:-3}\"\n\n    command:\n      - bash\n      - -lc\n      - >\n        export PATH=\"/usr/local/cuda/bin:/usr/local/bin:$${PATH:-}\";\n        export CUDA_HOME=\"$${CUDA_HOME:-/usr/local/cuda}\";\n        export LD_LIBRARY_PATH=\"/usr/local/cuda/lib64:$${LD_LIBRARY_PATH:-}\";\n        exec /usr/local/bin/vllm serve ${DSPARK_MODEL:-deepseek-ai/DeepSeek-V4-Flash-DSpark}\n        --served-model-name ${SERVED_MODEL_NAME:-deepseek-v4-flash-dspark}\n        --host ${VLLM_HOST:-0.0.0.0}\n        --port ${VLLM_PORT:-8888}\n        --trust-remote-code\n        --tensor-parallel-size 2\n        --pipeline-parallel-size 1\n        --kv-cache-dtype nvfp4_ds_mla\n        --block-size 256\n        --max-model-len ${MAX_MODEL_LEN:-1048576}\n        --max-num-seqs ${MAX_NUM_SEQS:-6}\n        --max-num-batched-tokens ${MAX_NUM_BATCHED_TOKENS:-8192}\n        --max-cudagraph-capture-size $$(( ${MAX_NUM_SEQS:-6} * (${MTP_NUM_TOKENS:-3} + 1) ))\n        --gpu-memory-utilization ${GPU_MEMORY_UTILIZATION:-0.85}\n        --enable-prefix-caching\n        --enable-chunked-prefill\n        --async-scheduling\n        --speculative-config '{\"method\":\"dspark\",\"num_speculative_tokens\":'${MTP_NUM_TOKENS:-3}',\"draft_sample_method\":\"probabilistic\"}'\n        --tokenizer-mode deepseek_v4\n        --distributed-executor-backend mp\n        --moe-backend flashinfer_b12x\n        --enable-flashinfer-autotune\n        --tool-call-parser deepseek_v4\n        --enable-auto-tool-choice\n        --reasoning-parser deepseek_v4\n        --reasoning-config '{\"reasoning_parser\":\"deepseek_v4\",\"reasoning_start_str\":\"<think>\",\"reasoning_end_str\":\"</think>\"}'\n        --default-chat-template-kwargs '{\"thinking\":false}'\n        --generation-config vllm\n        --nnodes 2\n        --node-rank ${NODE_RANK}\n        --master-addr ${MASTER_ADDR}\n        --master-port ${MASTER_PORT:-25000}\n        ${HEADLESS:+--headless}\nCOMPOSE",
+      "verdict": "Serve the 284B/13B DeepSeek V4 Flash DSpark checkpoint across two DGX Sparks at its full 1M-token context, with FP4 experts, an NVFP4 MLA KV cache, and DSpark speculative decoding at k=5 — 42.0 tok/s single-stream on prose and 76.0 on code."
     },
     {
-      "id": "howtospark-laguna-s-2-1-nvfp4-single-spark",
-      "sourceSlug": "laguna-s-2-1-nvfp4-single-spark",
-      "rank": 6,
-      "name": "Laguna-S 2.1 (poolside)",
-      "official": "poolside/Laguna-S-2.1-NVFP4",
-      "howToSparkModelUrl": null,
+      "id": "howtospark-ornith-1-35b-bf16",
+      "sourceSlug": "ornith-1-35b-bf16",
+      "rank": 7,
+      "name": "Ornith 1.0 35B",
+      "official": "deepreinforce-ai/Ornith-1.0-35B",
+      "howToSparkModelUrl": "https://howtospark.com/recipes/ornith-1-35b-bf16",
       "nvidiaModelCardUrl": null,
       "type": "MoE",
-      "totalParams": "118B",
-      "activeParams": "8B active",
+      "totalParams": "35B",
+      "activeParams": "3B active",
       "context": "256K",
-      "speedMax": 42.87,
-      "speedTypical": "42.87 tok/s",
-      "speedRange": "31–36.9 tok/s across 4 latest runs; 2026-07-25",
-      "engine": "vLLM 0.25.1 / NVFP4 / 1 Spark",
+      "speedMax": 30.3,
+      "speedTypical": "30.3 tok/s",
+      "speedRange": "30.3 tok/s recipe result",
+      "engine": "BF16 / 1 Spark",
+      "quality": 4,
+      "qualityLabel": "HowToSpark: Agentic work",
+      "recommendation": "High — agentic work",
+      "nodes": 1,
+      "measured": true,
+      "multimodal": false,
+      "coding": true,
+      "strengths": [
+        "HowToSpark agentic work pick",
+        "Measured on DGX Spark hardware",
+        "256K context recipe"
+      ],
+      "weaknesses": [
+        "Task quality should be validated against your workload"
+      ],
+      "sources": [
+        "howtospark_ornith_1_35b_bf16"
+      ],
+      "command": "PATH=\"$HOME/venvs/vllm/bin:$PATH\" VLLM_USE_DEEP_GEMM=0 \\\nTORCHINDUCTOR_COMPILE_THREADS=2 MAX_JOBS=4 \\\nvllm serve ~/models/hf/Ornith-1.0-35B \\\n  --served-model-name ornith \\\n  --max-model-len 262144 \\\n  --kv-cache-memory-bytes 8589934592 \\\n  --gpu-memory-utilization 0.92 \\\n  --max-num-seqs 4 \\\n  --max-num-batched-tokens 8192 \\\n  --limit-mm-per-prompt '{\"image\":1,\"video\":0}' \\\n  --host 0.0.0.0 --port 8000 2>&1 | tee /tmp/vllm-ornith.log",
+      "verdict": "Deep Reinforce's agentic-coding Ornith 1.0 35B (35B MoE, ~3B active) unquantized in BF16 on one DGX Spark, serving the full 262,144-token context at 30.3 tok/s single-stream."
+    },
+    {
+      "id": "howtospark-qwen-agentworld-35b-a3b-bf16",
+      "sourceSlug": "qwen-agentworld-35b-a3b-bf16",
+      "rank": 8,
+      "name": "Qwen AgentWorld 35B-A3B",
+      "official": "Qwen/Qwen-AgentWorld-35B-A3B",
+      "howToSparkModelUrl": "https://howtospark.com/recipes/qwen-agentworld-35b-a3b-bf16",
+      "nvidiaModelCardUrl": null,
+      "type": "MoE",
+      "totalParams": "35B",
+      "activeParams": "3B active",
+      "context": "256K",
+      "speedMax": 30.4,
+      "speedTypical": "30.4 tok/s",
+      "speedRange": "30.4 tok/s recipe result",
+      "engine": "BF16 / 1 Spark",
+      "quality": 4,
+      "qualityLabel": "HowToSpark: Agentic work",
+      "recommendation": "High — agentic work",
+      "nodes": 1,
+      "measured": true,
+      "multimodal": false,
+      "coding": true,
+      "strengths": [
+        "HowToSpark agentic work pick",
+        "Measured on DGX Spark hardware",
+        "256K context recipe"
+      ],
+      "weaknesses": [
+        "Task quality should be validated against your workload"
+      ],
+      "sources": [
+        "howtospark_qwen_agentworld_35b_a3b_bf16"
+      ],
+      "command": "PATH=\"$HOME/venvs/vllm/bin:$PATH\" VLLM_USE_DEEP_GEMM=0 \\\nTORCHINDUCTOR_COMPILE_THREADS=2 MAX_JOBS=4 \\\nvllm serve ~/models/hf/Qwen-AgentWorld-35B-A3B \\\n  --served-model-name Qwen/Qwen-AgentWorld-35B-A3B \\\n  --max-model-len 262144 \\\n  --kv-cache-memory-bytes 8589934592 \\\n  --gpu-memory-utilization 0.90 \\\n  --max-num-seqs 4 \\\n  --max-num-batched-tokens 8192 \\\n  --language-model-only \\\n  --port 8000",
+      "verdict": "Qwen's agentic AgentWorld 35B-A3B (35B MoE, ~3B active) unquantized in BF16 on one DGX Spark, serving the full 262,144-token context at 30.4 tok/s single-stream."
+    },
+    {
+      "id": "howtospark-qwen3-6-27b-nvfp4",
+      "sourceSlug": "qwen3-6-27b-nvfp4",
+      "rank": 9,
+      "name": "Qwen3.6 27B — NVFP4 (mixed precision)",
+      "official": "nvidia/Qwen3.6-27B-NVFP4",
+      "howToSparkModelUrl": "https://howtospark.com/recipes/qwen3-6-27b-nvfp4",
+      "nvidiaModelCardUrl": null,
+      "type": "Dense",
+      "totalParams": "27B",
+      "activeParams": "Not stated",
+      "context": "256K",
+      "speedMax": 31.75,
+      "speedTypical": "31.75 tok/s",
+      "speedRange": "28.7–31.7 tok/s across 4 latest runs; 2026-07-26",
+      "engine": "vLLM 0.26.0 / NVFP4 / 1 Spark",
       "quality": 3,
       "qualityLabel": "HowToSpark measured recipe",
       "recommendation": "Medium — measured recipe",
       "nodes": 1,
       "measured": true,
-      "multimodal": false,
-      "coding": true,
+      "multimodal": true,
+      "coding": false,
       "strengths": [
         "Measured on DGX Spark hardware",
         "256K context recipe"
@@ -296,18 +431,18 @@ window.HOWTOSPARK_DATA = {
         "Task quality should be validated against your workload"
       ],
       "sources": [
-        "howtospark_laguna_s_2_1_nvfp4_single_spark"
+        "howtospark_qwen3_6_27b_nvfp4"
       ],
-      "command": "VENV=$HOME/venvs/vllm-025\nsystemd-run --user --scope --collect -p MemoryMax=118G -p MemorySwapMax=0 \\\n  env PATH=\"$VENV/bin:$HOME/.local/bin:/usr/local/cuda/bin:$PATH\" VLLM_USE_DEEP_GEMM=0 \\\n  vllm serve ~/models/hf/Laguna-S-2.1-NVFP4 \\\n  --served-model-name laguna-s-nvfp4 \\\n  --max-model-len 262144 \\\n  --gpu-memory-utilization 0.85 \\\n  --kv-cache-memory-bytes 12884901888 \\\n  --max-num-seqs 4 --max-num-batched-tokens 8192 \\\n  --speculative-config '{\"method\":\"dflash\",\"model\":\"'$HOME'/models/hf/Laguna-S-2.1-DFlash-NVFP4\",\"num_speculative_tokens\":6}' \\\n  --host 0.0.0.0 --port 8000",
-      "verdict": "poolside's agentic-coding Laguna-S 2.1 (118B MoE, ~8B active) in NVFP4 on one DGX Spark, with the matching NVFP4 DFlash speculator — 42.9 tok/s single-stream (2.3x the no-draft baseline) at the full 262K context."
+      "command": "PATH=\"$HOME/venvs/vllm-026/bin:/usr/local/cuda/bin:$PATH\" \\\nvllm serve ~/models/hf/Qwen3.6-27B-NVFP4 \\\n  --served-model-name qwen3.6-27b \\\n  --max-model-len 262144 \\\n  --gpu-memory-utilization 0.90 \\\n  --kv-cache-memory-bytes 15032385536 \\\n  --max-num-seqs 4 \\\n  --max-num-batched-tokens 8192 \\\n  --host 0.0.0.0 --port 8000 \\\n  --speculative-config '{\"method\":\"mtp\",\"num_speculative_tokens\":5}'",
+      "verdict": "Qwen3.6 27B — a dense 27B with hybrid GDN/full attention and a vision tower — in mixed NVFP4 on one DGX Spark, with the checkpoint's own MTP head speculating 5 tokens ahead: 31.8 tok/s single-stream, 2.6× the no-draft baseline, at the full 262,144-token context."
     },
     {
       "id": "howtospark-btl3-27b-bf16",
       "sourceSlug": "btl3-27b-bf16",
-      "rank": 7,
+      "rank": 10,
       "name": "BTL-3 (Qwen3.6-27B)",
       "official": "badtheorylabs/BTL-3 — model card + adapter_config.json",
-      "howToSparkModelUrl": null,
+      "howToSparkModelUrl": "https://howtospark.com/recipes/btl3-27b-bf16",
       "nvidiaModelCardUrl": null,
       "type": "Dense",
       "totalParams": "27B",
@@ -338,9 +473,45 @@ window.HOWTOSPARK_DATA = {
       "verdict": "badtheorylabs' BTL-3 agentic coder (a LoRA on Qwen3.6-27B, ~27B dense) in BF16 on one DGX Spark, with the base model's native MTP head driving speculative decode — 12.8 tok/s single-stream, 2.9x the no-draft baseline, at the full 262K context."
     },
     {
+      "id": "howtospark-laguna-s-2-1-nvfp4-single-spark",
+      "sourceSlug": "laguna-s-2-1-nvfp4-single-spark",
+      "rank": 11,
+      "name": "Laguna-S 2.1 (poolside)",
+      "official": "poolside/Laguna-S-2.1-NVFP4",
+      "howToSparkModelUrl": "https://howtospark.com/recipes/laguna-s-2-1-nvfp4-single-spark",
+      "nvidiaModelCardUrl": null,
+      "type": "MoE",
+      "totalParams": "118B",
+      "activeParams": "8B active",
+      "context": "256K",
+      "speedMax": 42.87,
+      "speedTypical": "42.87 tok/s",
+      "speedRange": "31–36.9 tok/s across 4 latest runs; 2026-07-25",
+      "engine": "vLLM 0.25.1 / NVFP4 / 1 Spark",
+      "quality": 3,
+      "qualityLabel": "HowToSpark measured recipe",
+      "recommendation": "Medium — measured recipe",
+      "nodes": 1,
+      "measured": true,
+      "multimodal": false,
+      "coding": true,
+      "strengths": [
+        "Measured on DGX Spark hardware",
+        "256K context recipe"
+      ],
+      "weaknesses": [
+        "Task quality should be validated against your workload"
+      ],
+      "sources": [
+        "howtospark_laguna_s_2_1_nvfp4_single_spark"
+      ],
+      "command": "VENV=$HOME/venvs/vllm-025\nsystemd-run --user --scope --collect -p MemoryMax=118G -p MemorySwapMax=0 \\\n  env PATH=\"$VENV/bin:$HOME/.local/bin:/usr/local/cuda/bin:$PATH\" VLLM_USE_DEEP_GEMM=0 \\\n  vllm serve ~/models/hf/Laguna-S-2.1-NVFP4 \\\n  --served-model-name laguna-s-nvfp4 \\\n  --max-model-len 262144 \\\n  --gpu-memory-utilization 0.85 \\\n  --kv-cache-memory-bytes 12884901888 \\\n  --max-num-seqs 4 --max-num-batched-tokens 8192 \\\n  --speculative-config '{\"method\":\"dflash\",\"model\":\"'$HOME'/models/hf/Laguna-S-2.1-DFlash-NVFP4\",\"num_speculative_tokens\":6}' \\\n  --host 0.0.0.0 --port 8000",
+      "verdict": "poolside's agentic-coding Laguna-S 2.1 (118B MoE, ~8B active) in NVFP4 on one DGX Spark, with the matching NVFP4 DFlash speculator — 42.9 tok/s single-stream (2.3x the no-draft baseline) at the full 262K context."
+    },
+    {
       "id": "howtospark-hy3-nvfp4-dual-spark-tp2",
       "sourceSlug": "hy3-nvfp4-dual-spark-tp2",
-      "rank": 8,
+      "rank": 12,
       "name": "Hy3 NVFP4",
       "official": "LibertAIDAI/Hy3-NVFP4 — deploy/README.md (2× GB10 recipe)",
       "howToSparkModelUrl": "https://howtospark.com/models/tencent-hy3",
@@ -377,10 +548,10 @@ window.HOWTOSPARK_DATA = {
     {
       "id": "howtospark-laguna-s-2-1-fp8-dual-spark-tp2",
       "sourceSlug": "laguna-s-2-1-fp8-dual-spark-tp2",
-      "rank": 9,
+      "rank": 13,
       "name": "Laguna-S 2.1 FP8",
       "official": "poolside/Laguna-S-2.1-FP8",
-      "howToSparkModelUrl": null,
+      "howToSparkModelUrl": "https://howtospark.com/recipes/laguna-s-2-1-fp8-dual-spark-tp2",
       "nvidiaModelCardUrl": null,
       "type": "MoE",
       "totalParams": "118B",
@@ -414,10 +585,10 @@ window.HOWTOSPARK_DATA = {
     {
       "id": "howtospark-solar-open2-250b-nota-nvfp4",
       "sourceSlug": "solar-open2-250b-nota-nvfp4",
-      "rank": 10,
+      "rank": 14,
       "name": "Solar-Open2 250B NVFP4",
       "official": "How To Spark — out-of-tree vLLM port (vllm/solar_open2/)",
-      "howToSparkModelUrl": null,
+      "howToSparkModelUrl": "https://howtospark.com/recipes/solar-open2-250b-nota-nvfp4",
       "nvidiaModelCardUrl": null,
       "type": "MoE",
       "totalParams": "250B",
