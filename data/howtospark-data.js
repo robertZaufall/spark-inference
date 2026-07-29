@@ -3,9 +3,9 @@ window.HOWTOSPARK_DATA = {
   "schemaVersion": 1,
   "mode": "transition",
   "sourceUrl": "https://howtospark.com/",
-  "generatedAt": "2026-07-27T00:00:00.000Z",
+  "generatedAt": "2026-07-28T00:00:00.000Z",
   "latestBenchmarkCount": 10,
-  "latestBenchmarkDate": "2026-07-27",
+  "latestBenchmarkDate": "2026-07-28",
   "hardwareEvidence": [
     "howtospark_hardware"
   ],
@@ -13,14 +13,14 @@ window.HOWTOSPARK_DATA = {
     "howtospark_hardware": {
       "title": "HowToSpark: NVIDIA DGX Spark hardware summary",
       "url": "https://howtospark.com/",
-      "date": "Snapshot 2026-07-27",
+      "date": "Snapshot 2026-07-28",
       "claim": "HowToSpark identifies the benchmark hardware as NVIDIA DGX Spark with 128 GB unified LPDDR5x and 273 GB/s bandwidth."
     },
     "howtospark_deepseek_v4_flash_dspark_dual_spark_1m": {
       "title": "HowToSpark recipe: DeepSeek V4 Flash DSpark",
       "url": "https://howtospark.com/recipes/deepseek-v4-flash-dspark-dual-spark-1m",
-      "date": "Latest run 2026-07-27",
-      "claim": "Serve the 284B/13B DeepSeek V4 Flash DSpark checkpoint across two DGX Sparks at its full 1M-token context, with FP4 experts, an NVFP4 MLA KV cache, and DSpark speculative decoding at k=5 — 42.0 tok/s single-stream on prose and 76.0 on code. Latest normalized throughput: 42–43.1 tok/s across 2 latest runs; 2026-07-27."
+      "date": "Latest run 2026-07-28",
+      "claim": "Serve the 284B/13B DeepSeek V4 Flash DSpark checkpoint across two DGX Sparks at its full 1M-token context, with FP4 experts, an NVFP4 MLA KV cache, and DSpark speculative decoding at k=5 — 42.0 tok/s single-stream on prose and 76.0 on code. Latest normalized throughput: 42–53.2 tok/s across 6 latest runs; 2026-07-28."
     },
     "howtospark_qwen3_6_35b_a3b_nvfp4_fast": {
       "title": "HowToSpark recipe: Qwen3.6 35B-A3B NVFP4 (Unsloth Fast)",
@@ -68,7 +68,7 @@ window.HOWTOSPARK_DATA = {
       "title": "HowToSpark recipe: Qwen AgentWorld 35B-A3B — NVFP4",
       "url": "https://howtospark.com/recipes/qwen-agentworld-35b-a3b-nvfp4",
       "date": "Current recipe snapshot",
-      "claim": "Qwen's agentic AgentWorld 35B-A3B (35B MoE, ~3B active) in NVFP4 on one DGX Spark, serving the full 262,144-token context at 64.1 tok/s single-stream. Latest normalized throughput: 64.09 tok/s recipe result."
+      "claim": "Qwen's agentic AgentWorld 35B-A3B (35B MoE, ~3B active) in NVFP4 on one DGX Spark, serving the full 262,144-token context at 83.1 tok/s single-stream with Qwen3.6's MTP head grafted in. Latest normalized throughput: 83.08 tok/s recipe result."
     },
     "howtospark_ornith_1_9b_bf16": {
       "title": "HowToSpark recipe: Ornith 1.0 9B — BF16",
@@ -85,8 +85,8 @@ window.HOWTOSPARK_DATA = {
     "howtospark_laguna_s_2_1_nvfp4_single_spark": {
       "title": "HowToSpark recipe: Laguna-S 2.1 NVFP4",
       "url": "https://howtospark.com/recipes/laguna-s-2-1-nvfp4-single-spark",
-      "date": "Latest run 2026-07-25",
-      "claim": "poolside's agentic-coding Laguna-S 2.1 (118B MoE, ~8B active) in NVFP4 on one DGX Spark, with our W4A16 Sparkulator quant of the matching NVFP4 DFlash speculator — 45.9 tok/s single-stream at the full 262K context, +7% over poolside's BF16 draft at identical acceptance. Latest normalized throughput: 31–36.9 tok/s across 4 latest runs; 2026-07-25."
+      "date": "Current recipe snapshot",
+      "claim": "poolside's agentic-coding Laguna-S 2.1 (118B MoE, ~8B active) in NVFP4 on one DGX Spark, with our W4A16 Sparkulator quant of the matching NVFP4 DFlash speculator — 45.9 tok/s single-stream at the full 262K context, +7% over poolside's BF16 draft at identical acceptance. Latest normalized throughput: 45.85 tok/s recipe result."
     },
     "howtospark_nemotron_3_nano_30b_a3b_nvfp4": {
       "title": "HowToSpark recipe: Nemotron 3 Nano 30B-A3B — NVFP4",
@@ -105,6 +105,12 @@ window.HOWTOSPARK_DATA = {
       "url": "https://howtospark.com/recipes/laguna-xs-2-1-q4-k-m",
       "date": "Current recipe snapshot",
       "claim": "Serve poolside's agentic-coding Laguna-XS 2.1 (33B MoE, ~3B active) on one DGX Spark as a 20.3 GB Q4_K_M GGUF: 90.4 tok/s single-stream with no draft, 122.7 with the DFlash speculator, and the model's full native 262,144-token window open the whole time — which, measured, costs about 1 GiB and zero decode speed. Needs a llama.cpp build carrying the laguna architecture port; stock llama.cpp cannot load this model at all. Latest normalized throughput: 122.74 tok/s recipe result."
+    },
+    "howtospark_qwen3_6_35b_a3b_fp8": {
+      "title": "HowToSpark recipe: Qwen3.6 35B-A3B — FP8",
+      "url": "https://howtospark.com/recipes/qwen3-6-35b-a3b-fp8",
+      "date": "Current recipe snapshot",
+      "claim": "Qwen's own FP8 build of Qwen3.6 35B-A3B serves the full 262,144-token context on one DGX Spark in about 41 GiB and, unlike the NVFP4A16 build, it gets a real FP8 kernel path — vLLM picks the TRITON FP8 MoE backend, not the MARLIN fallback. It still decodes slower: 38.3 tok/s against 42.6 for NVFP4A16 and 106.5 for Unsloth's NVFP4-Fast. The reason is bytes, not kernels — the FP8 export carries 30.1 GiB of expert planes against roughly 17.5 — and like every official Qwen3.6 export it ships no MTP head. Latest normalized throughput: 38.27 tok/s recipe result."
     },
     "howtospark_kimi_linear_48b_a3b_bf16": {
       "title": "HowToSpark recipe: Kimi Linear 48B-A3B — BF16",
@@ -198,10 +204,10 @@ window.HOWTOSPARK_DATA = {
       "totalParams": "284B",
       "activeParams": "13B active",
       "context": "1M",
-      "speedMax": 43.1,
-      "speedTypical": "43.1 tok/s",
-      "speedRange": "42–43.1 tok/s across 2 latest runs; 2026-07-27",
-      "engine": "vLLM 0.25.2.dev0+g752a3a504 (ghcr.io/anemll/dspark-vllm-gx10:0.1.1) / FP4 / 2 Sparks",
+      "speedMax": 53.2,
+      "speedTypical": "53.2 tok/s",
+      "speedRange": "42–53.2 tok/s across 6 latest runs; 2026-07-28",
+      "engine": "vLLM 0.25.2.dev0+g752a3a504 / FP4 / 2 Sparks",
       "quality": 4,
       "qualityLabel": "HowToSpark: DeepSeek V4 Flash DSpark",
       "recommendation": "High — deepseek v4 flash dspark",
@@ -493,9 +499,9 @@ window.HOWTOSPARK_DATA = {
       "totalParams": "35B",
       "activeParams": "3B active",
       "context": "256K",
-      "speedMax": 64.09,
-      "speedTypical": "64.09 tok/s",
-      "speedRange": "64.09 tok/s recipe result",
+      "speedMax": 83.08,
+      "speedTypical": "83.08 tok/s",
+      "speedRange": "83.08 tok/s recipe result",
       "engine": "NVFP4 / 1 Spark",
       "quality": 3,
       "qualityLabel": "HowToSpark measured recipe",
@@ -514,8 +520,8 @@ window.HOWTOSPARK_DATA = {
       "sources": [
         "howtospark_qwen_agentworld_35b_a3b_nvfp4"
       ],
-      "command": "PATH=\"$HOME/venvs/vllm/bin:$HOME/.local/bin:/usr/local/cuda/bin:$PATH\" \\\nVLLM_USE_DEEP_GEMM=0 TORCHINDUCTOR_COMPILE_THREADS=2 MAX_JOBS=4 \\\nvllm serve ~/models/hf/Qwen-AgentWorld-35B-A3B-NVFP4 \\\n  --served-model-name Qwen-AgentWorld-35B-A3B-NVFP4 \\\n  --max-model-len 262144 \\\n  --kv-cache-memory-bytes 8589934592 \\\n  --gpu-memory-utilization 0.90 \\\n  --max-num-seqs 4 \\\n  --max-num-batched-tokens 8192 \\\n  --port 8000",
-      "verdict": "Qwen's agentic AgentWorld 35B-A3B (35B MoE, ~3B active) in NVFP4 on one DGX Spark, serving the full 262,144-token context at 64.1 tok/s single-stream."
+      "command": "PATH=\"$HOME/venvs/vllm/bin:$HOME/.local/bin:/usr/local/cuda/bin:$PATH\" \\\nVLLM_USE_DEEP_GEMM=0 TORCHINDUCTOR_COMPILE_THREADS=2 MAX_JOBS=4 \\\nvllm serve ~/models/hf/Qwen-AgentWorld-35B-A3B-NVFP4-MTP \\\n  --served-model-name Qwen-AgentWorld-35B-A3B-NVFP4 \\\n  --max-model-len 262144 \\\n  --kv-cache-memory-bytes 8589934592 \\\n  --gpu-memory-utilization 0.90 \\\n  --max-num-seqs 4 \\\n  --max-num-batched-tokens 8192 \\\n  --speculative-config '{\"method\":\"mtp\",\"num_speculative_tokens\":2}' \\\n  --port 8000",
+      "verdict": "Qwen's agentic AgentWorld 35B-A3B (35B MoE, ~3B active) in NVFP4 on one DGX Spark, serving the full 262,144-token context at 83.1 tok/s single-stream with Qwen3.6's MTP head grafted in."
     },
     {
       "id": "howtospark-ornith-1-9b-bf16",
@@ -593,7 +599,7 @@ window.HOWTOSPARK_DATA = {
       "id": "howtospark-laguna-s-2-1-nvfp4-single-spark",
       "sourceSlug": "laguna-s-2-1-nvfp4-single-spark",
       "rank": 12,
-      "name": "Laguna-S 2.1 (poolside)",
+      "name": "Laguna-S 2.1 NVFP4",
       "official": "poolside/Laguna-S-2.1-NVFP4",
       "howToSparkModelUrl": "https://howtospark.com/recipes/laguna-s-2-1-nvfp4-single-spark",
       "nvidiaModelCardUrl": null,
@@ -603,8 +609,8 @@ window.HOWTOSPARK_DATA = {
       "context": "256K",
       "speedMax": 45.85,
       "speedTypical": "45.85 tok/s",
-      "speedRange": "31–36.9 tok/s across 4 latest runs; 2026-07-25",
-      "engine": "vLLM 0.25.1 / NVFP4 / 1 Spark",
+      "speedRange": "45.85 tok/s recipe result",
+      "engine": "NVFP4 / 1 Spark",
       "quality": 3,
       "qualityLabel": "HowToSpark measured recipe",
       "recommendation": "Medium — measured recipe",
@@ -734,9 +740,45 @@ window.HOWTOSPARK_DATA = {
       "verdict": "Serve poolside's agentic-coding Laguna-XS 2.1 (33B MoE, ~3B active) on one DGX Spark as a 20.3 GB Q4_K_M GGUF: 90.4 tok/s single-stream with no draft, 122.7 with the DFlash speculator, and the model's full native 262,144-token window open the whole time — which, measured, costs about 1 GiB and zero decode speed. Needs a llama.cpp build carrying the laguna architecture port; stock llama.cpp cannot load this model at all."
     },
     {
+      "id": "howtospark-qwen3-6-35b-a3b-fp8",
+      "sourceSlug": "qwen3-6-35b-a3b-fp8",
+      "rank": 16,
+      "name": "Qwen3.6 35B-A3B",
+      "official": "Qwen/Qwen3.6-35B-A3B-FP8",
+      "howToSparkModelUrl": "https://howtospark.com/recipes/qwen3-6-35b-a3b-fp8",
+      "nvidiaModelCardUrl": null,
+      "type": "MoE",
+      "totalParams": "35B",
+      "activeParams": "3B active",
+      "context": "256K",
+      "speedMax": 38.27,
+      "speedTypical": "38.27 tok/s",
+      "speedRange": "38.27 tok/s recipe result",
+      "engine": "FP8 / 1 Spark",
+      "quality": 3,
+      "qualityLabel": "HowToSpark measured recipe",
+      "recommendation": "Medium — measured recipe",
+      "nodes": 1,
+      "measured": true,
+      "multimodal": false,
+      "coding": false,
+      "strengths": [
+        "Measured on DGX Spark hardware",
+        "256K context recipe"
+      ],
+      "weaknesses": [
+        "Task quality should be validated against your workload"
+      ],
+      "sources": [
+        "howtospark_qwen3_6_35b_a3b_fp8"
+      ],
+      "command": "PATH=\"$HOME/venvs/vllm/bin:$PATH\" VLLM_USE_DEEP_GEMM=0 \\\nTORCHINDUCTOR_COMPILE_THREADS=2 MAX_JOBS=4 \\\nvllm serve ~/models/hf/Qwen3.6-35B-A3B-FP8 \\\n  --served-model-name Qwen/Qwen3.6-35B-A3B-FP8 \\\n  --max-model-len 262144 \\\n  --kv-cache-memory-bytes 6442450944 \\\n  --gpu-memory-utilization 0.85 \\\n  --max-num-seqs 4 \\\n  --max-num-batched-tokens 8192 \\\n  --port 8000",
+      "verdict": "Qwen's own FP8 build of Qwen3.6 35B-A3B serves the full 262,144-token context on one DGX Spark in about 41 GiB and, unlike the NVFP4A16 build, it gets a real FP8 kernel path — vLLM picks the TRITON FP8 MoE backend, not the MARLIN fallback. It still decodes slower: 38.3 tok/s against 42.6 for NVFP4A16 and 106.5 for Unsloth's NVFP4-Fast. The reason is bytes, not kernels — the FP8 export carries 30.1 GiB of expert planes against roughly 17.5 — and like every official Qwen3.6 export it ships no MTP head."
+    },
+    {
       "id": "howtospark-kimi-linear-48b-a3b-bf16",
       "sourceSlug": "kimi-linear-48b-a3b-bf16",
-      "rank": 16,
+      "rank": 17,
       "name": "Kimi Linear 48B-A3B",
       "official": "moonshotai/Kimi-Linear-48B-A3B-Instruct",
       "howToSparkModelUrl": "https://howtospark.com/recipes/kimi-linear-48b-a3b-bf16",
@@ -772,7 +814,7 @@ window.HOWTOSPARK_DATA = {
     {
       "id": "howtospark-nemotron-3-nano-30b-a3b-bf16",
       "sourceSlug": "nemotron-3-nano-30b-a3b-bf16",
-      "rank": 17,
+      "rank": 18,
       "name": "Nemotron 3 Nano 30B-A3B",
       "official": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
       "howToSparkModelUrl": "https://howtospark.com/recipes/nemotron-3-nano-30b-a3b-bf16",
@@ -808,7 +850,7 @@ window.HOWTOSPARK_DATA = {
     {
       "id": "howtospark-qwen3-6-27b-nvfp4",
       "sourceSlug": "qwen3-6-27b-nvfp4",
-      "rank": 18,
+      "rank": 19,
       "name": "Qwen3.6 27B — NVFP4 (mixed precision)",
       "official": "nvidia/Qwen3.6-27B-NVFP4",
       "howToSparkModelUrl": "https://howtospark.com/recipes/qwen3-6-27b-nvfp4",
@@ -844,7 +886,7 @@ window.HOWTOSPARK_DATA = {
     {
       "id": "howtospark-qwen3-6-35b-a3b-nvfp4",
       "sourceSlug": "qwen3-6-35b-a3b-nvfp4",
-      "rank": 19,
+      "rank": 20,
       "name": "Qwen3.6 35B-A3B",
       "official": "nvidia/Qwen3.6-35B-A3B-NVFP4",
       "howToSparkModelUrl": "https://howtospark.com/recipes/qwen3-6-35b-a3b-nvfp4",
@@ -880,7 +922,7 @@ window.HOWTOSPARK_DATA = {
     {
       "id": "howtospark-ornith-1-35b-bf16",
       "sourceSlug": "ornith-1-35b-bf16",
-      "rank": 20,
+      "rank": 21,
       "name": "Ornith 1.0 35B",
       "official": "deepreinforce-ai/Ornith-1.0-35B",
       "howToSparkModelUrl": "https://howtospark.com/recipes/ornith-1-35b-bf16",
@@ -916,7 +958,7 @@ window.HOWTOSPARK_DATA = {
     {
       "id": "howtospark-qwen3-coder-next-nvfp4",
       "sourceSlug": "qwen3-coder-next-nvfp4",
-      "rank": 21,
+      "rank": 22,
       "name": "Qwen3-Coder-Next NVFP4",
       "official": "gdubicki/Qwen3-Coder-Next-NVFP4-GB10",
       "howToSparkModelUrl": "https://howtospark.com/recipes/qwen3-coder-next-nvfp4",
@@ -952,7 +994,7 @@ window.HOWTOSPARK_DATA = {
     {
       "id": "howtospark-t-search-nvfp4",
       "sourceSlug": "t-search-nvfp4",
-      "rank": 22,
+      "rank": 23,
       "name": "T-Search 35B-A3B NVFP4",
       "official": "t-tech/T-Search-NVFP4",
       "howToSparkModelUrl": "https://howtospark.com/recipes/t-search-nvfp4",
@@ -988,7 +1030,7 @@ window.HOWTOSPARK_DATA = {
     {
       "id": "howtospark-btl3-27b-bf16",
       "sourceSlug": "btl3-27b-bf16",
-      "rank": 23,
+      "rank": 24,
       "name": "BTL-3 (Qwen3.6-27B)",
       "official": "badtheorylabs/BTL-3 — model card + adapter_config.json",
       "howToSparkModelUrl": "https://howtospark.com/recipes/btl3-27b-bf16",
@@ -1024,7 +1066,7 @@ window.HOWTOSPARK_DATA = {
     {
       "id": "howtospark-ornith-1-35b-fp8",
       "sourceSlug": "ornith-1-35b-fp8",
-      "rank": 24,
+      "rank": 25,
       "name": "Ornith 1.0 35B",
       "official": "deepreinforce-ai/Ornith-1.0-35B-FP8",
       "howToSparkModelUrl": "https://howtospark.com/recipes/ornith-1-35b-fp8",
@@ -1060,7 +1102,7 @@ window.HOWTOSPARK_DATA = {
     {
       "id": "howtospark-gemma-4-26b-a4b-it-fp8-dynamic",
       "sourceSlug": "gemma-4-26b-a4b-it-fp8-dynamic",
-      "rank": 25,
+      "rank": 26,
       "name": "Gemma 4 26B-A4B",
       "official": "RedHatAI/gemma-4-26B-A4B-it-FP8-Dynamic",
       "howToSparkModelUrl": "https://howtospark.com/recipes/gemma-4-26b-a4b-it-fp8-dynamic",
@@ -1096,7 +1138,7 @@ window.HOWTOSPARK_DATA = {
     {
       "id": "howtospark-hy3-nvfp4-dual-spark-tp2",
       "sourceSlug": "hy3-nvfp4-dual-spark-tp2",
-      "rank": 26,
+      "rank": 27,
       "name": "Hy3 NVFP4",
       "official": "LibertAIDAI/Hy3-NVFP4 — deploy/README.md (2× GB10 recipe)",
       "howToSparkModelUrl": "https://howtospark.com/models/tencent-hy3",
@@ -1133,7 +1175,7 @@ window.HOWTOSPARK_DATA = {
     {
       "id": "howtospark-laguna-s-2-1-fp8-dual-spark-tp2",
       "sourceSlug": "laguna-s-2-1-fp8-dual-spark-tp2",
-      "rank": 27,
+      "rank": 28,
       "name": "Laguna-S 2.1 FP8",
       "official": "poolside/Laguna-S-2.1-FP8",
       "howToSparkModelUrl": "https://howtospark.com/recipes/laguna-s-2-1-fp8-dual-spark-tp2",
@@ -1170,7 +1212,7 @@ window.HOWTOSPARK_DATA = {
     {
       "id": "howtospark-solar-open2-250b-nota-nvfp4",
       "sourceSlug": "solar-open2-250b-nota-nvfp4",
-      "rank": 28,
+      "rank": 29,
       "name": "Solar-Open2 250B NVFP4",
       "official": "How To Spark — out-of-tree vLLM port (vllm/solar_open2/)",
       "howToSparkModelUrl": "https://howtospark.com/recipes/solar-open2-250b-nota-nvfp4",
