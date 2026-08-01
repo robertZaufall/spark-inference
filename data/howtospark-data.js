@@ -91,8 +91,8 @@ window.HOWTOSPARK_DATA = {
     "howtospark_nemotron_3_nano_30b_a3b_nvfp4": {
       "title": "HowToSpark recipe: Nemotron 3 Nano 30B-A3B — NVFP4",
       "url": "https://howtospark.com/recipes/nemotron-3-nano-30b-a3b-nvfp4",
-      "date": "Current recipe snapshot",
-      "claim": "NVIDIA's Nemotron 3 Nano 30B-A3B (31.6B hybrid Mamba-MoE, ~3B active) in NVFP4 on one DGX Spark, serving the full 262,144-token context — 61.2 tok/s single-stream, and still 56.0 tok/s on a 131K-token prompt. Latest normalized throughput: 61.16 tok/s recipe result."
+      "date": "Latest run 2026-07-31",
+      "claim": "NVIDIA's Nemotron 3 Nano 30B-A3B (31.6B hybrid Mamba-MoE, ~3B active) in NVFP4 on one DGX Spark, serving the full 262,144-token context — 61.2 tok/s single-stream, and still 56.0 tok/s on a 131K-token prompt. Latest normalized throughput: 55.2–61.4 tok/s across 8 latest runs; 2026-07-31."
     },
     "howtospark_laguna_xs_2_1_nvfp4": {
       "title": "HowToSpark recipe: Laguna-XS 2.1 NVFP4",
@@ -110,7 +110,7 @@ window.HOWTOSPARK_DATA = {
       "title": "HowToSpark recipe: Qwen3.6 35B-A3B — FP8",
       "url": "https://howtospark.com/recipes/qwen3-6-35b-a3b-fp8",
       "date": "Latest run 2026-07-31",
-      "claim": "Qwen's own FP8 build of Qwen3.6 35B-A3B serves the full 262,144-token context on one DGX Spark in about 41 GiB and, unlike the NVFP4A16 build, it gets a real FP8 kernel path — vLLM picks the TRITON FP8 MoE backend, not the MARLIN fallback. It still decodes slower: 38.3 tok/s against 42.6 for NVFP4A16 and 106.5 for Unsloth's NVFP4-Fast. The reason is bytes, not kernels — the FP8 export carries 30.1 GiB of expert planes against roughly 17.5 — and like every official Qwen3.6 export it ships no MTP head. Latest normalized throughput: 33.3–53.5 tok/s across 4 latest runs; 2026-07-31."
+      "claim": "Qwen's own FP8 build of Qwen3.6 35B-A3B serves the full 262,144-token context on one DGX Spark in about 41 GiB and, unlike the NVFP4A16 build, it gets a real FP8 kernel path — vLLM picks the TRITON FP8 MoE backend, not the MARLIN fallback. It still decodes slower: 38.3 tok/s against 42.6 for NVFP4A16 and 106.5 for Unsloth's NVFP4-Fast. The reason is bytes, not kernels — the FP8 export carries 30.1 GiB of expert planes against roughly 17.5 — and like every official Qwen3.6 export it ships no MTP head. Latest normalized throughput: 33.3–46.2 tok/s across 2 latest runs; 2026-07-31."
     },
     "howtospark_kimi_linear_48b_a3b_bf16": {
       "title": "HowToSpark recipe: Kimi Linear 48B-A3B — BF16",
@@ -121,8 +121,8 @@ window.HOWTOSPARK_DATA = {
     "howtospark_nemotron_3_nano_30b_a3b_bf16": {
       "title": "HowToSpark recipe: Nemotron 3 Nano 30B-A3B — BF16",
       "url": "https://howtospark.com/recipes/nemotron-3-nano-30b-a3b-bf16",
-      "date": "Latest run 2026-07-31",
-      "claim": "The unquantized BF16 build of NVIDIA's Nemotron 3 Nano 30B-A3B on one DGX Spark. It serves the same full 262,144-token context as the NVFP4 recipe — but it costs 68 GiB instead of 28.3, and decodes at 28.9 tok/s instead of 61.2. This is the page that tells you what NVFP4 is actually buying. Latest normalized throughput: 25.9–28.4 tok/s across 4 latest runs; 2026-07-31."
+      "date": "Current recipe snapshot",
+      "claim": "The unquantized BF16 build of NVIDIA's Nemotron 3 Nano 30B-A3B on one DGX Spark. It serves the same full 262,144-token context as the NVFP4 recipe — but it costs 68 GiB instead of 28.3, and decodes at 28.9 tok/s instead of 61.2. This is the page that tells you what NVFP4 is actually buying. Latest normalized throughput: 28.93 tok/s recipe result."
     },
     "howtospark_qwen3_6_27b_nvfp4": {
       "title": "HowToSpark recipe: Qwen3.6 27B NVFP4 (NVIDIA ModelOpt)",
@@ -139,8 +139,8 @@ window.HOWTOSPARK_DATA = {
     "howtospark_ornith_1_35b_bf16": {
       "title": "HowToSpark recipe: Ornith 1.0 35B — BF16",
       "url": "https://howtospark.com/recipes/ornith-1-35b-bf16",
-      "date": "Latest run 2026-07-30",
-      "claim": "Deep Reinforce's agentic-coding Ornith 1.0 35B (35B MoE, ~3B active) unquantized in BF16 on one DGX Spark, serving the full 262,144-token context at 30.3 tok/s single-stream. Latest normalized throughput: 22.1–27.4 tok/s across 2 latest runs; 2026-07-30."
+      "date": "Current recipe snapshot",
+      "claim": "Deep Reinforce's agentic-coding Ornith 1.0 35B (35B MoE, ~3B active) unquantized in BF16 on one DGX Spark, serving the full 262,144-token context at 30.3 tok/s single-stream. Latest normalized throughput: 30.3 tok/s recipe result."
     },
     "howtospark_qwen3_coder_next_nvfp4": {
       "title": "HowToSpark recipe: Qwen3-Coder-Next NVFP4",
@@ -643,10 +643,10 @@ window.HOWTOSPARK_DATA = {
       "totalParams": "30B",
       "activeParams": "3B active",
       "context": "256K",
-      "speedMax": 61.16,
-      "speedTypical": "61.16 tok/s",
-      "speedRange": "61.16 tok/s recipe result",
-      "engine": "NVFP4 / 1 Spark",
+      "speedMax": 61.4,
+      "speedTypical": "61.4 tok/s",
+      "speedRange": "55.2–61.4 tok/s across 8 latest runs; 2026-07-31",
+      "engine": "vLLM 0.24.0 / NVFP4 / 1 Spark",
       "quality": 3,
       "qualityLabel": "HowToSpark measured recipe",
       "recommendation": "Medium — measured recipe",
@@ -751,9 +751,9 @@ window.HOWTOSPARK_DATA = {
       "totalParams": "35B",
       "activeParams": "3B active",
       "context": "256K",
-      "speedMax": 53.5,
-      "speedTypical": "53.5 tok/s",
-      "speedRange": "33.3–53.5 tok/s across 4 latest runs; 2026-07-31",
+      "speedMax": 46.2,
+      "speedTypical": "46.2 tok/s",
+      "speedRange": "33.3–46.2 tok/s across 2 latest runs; 2026-07-31",
       "engine": "vLLM 0.26.0 / FP8 / 1 Spark",
       "quality": 3,
       "qualityLabel": "HowToSpark measured recipe",
@@ -825,8 +825,8 @@ window.HOWTOSPARK_DATA = {
       "context": "256K",
       "speedMax": 28.93,
       "speedTypical": "28.93 tok/s",
-      "speedRange": "25.9–28.4 tok/s across 4 latest runs; 2026-07-31",
-      "engine": "vLLM 0.24.0 / BF16 / 1 Spark",
+      "speedRange": "28.93 tok/s recipe result",
+      "engine": "BF16 / 1 Spark",
       "quality": 3,
       "qualityLabel": "HowToSpark measured recipe",
       "recommendation": "Medium — measured recipe",
@@ -933,8 +933,8 @@ window.HOWTOSPARK_DATA = {
       "context": "256K",
       "speedMax": 30.3,
       "speedTypical": "30.3 tok/s",
-      "speedRange": "22.1–27.4 tok/s across 2 latest runs; 2026-07-30",
-      "engine": "vLLM 0.24.0 / BF16 / 1 Spark",
+      "speedRange": "30.3 tok/s recipe result",
+      "engine": "BF16 / 1 Spark",
       "quality": 3,
       "qualityLabel": "HowToSpark measured recipe",
       "recommendation": "Medium — measured recipe",
