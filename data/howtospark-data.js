@@ -3,9 +3,9 @@ window.HOWTOSPARK_DATA = {
   "schemaVersion": 1,
   "mode": "transition",
   "sourceUrl": "https://howtospark.com/",
-  "generatedAt": "2026-07-31T00:00:00.000Z",
+  "generatedAt": "2026-08-01T00:00:00.000Z",
   "latestBenchmarkCount": 10,
-  "latestBenchmarkDate": "2026-07-31",
+  "latestBenchmarkDate": "2026-08-01",
   "hardwareEvidence": [
     "howtospark_hardware"
   ],
@@ -13,7 +13,7 @@ window.HOWTOSPARK_DATA = {
     "howtospark_hardware": {
       "title": "HowToSpark: NVIDIA DGX Spark hardware summary",
       "url": "https://howtospark.com/",
-      "date": "Snapshot 2026-07-31",
+      "date": "Snapshot 2026-08-01",
       "claim": "HowToSpark identifies the benchmark hardware as NVIDIA DGX Spark with 128 GB unified LPDDR5x and 273 GB/s bandwidth."
     },
     "howtospark_deepseek_v4_flash_dspark_dual_spark_1m": {
@@ -91,8 +91,8 @@ window.HOWTOSPARK_DATA = {
     "howtospark_nemotron_3_nano_30b_a3b_nvfp4": {
       "title": "HowToSpark recipe: Nemotron 3 Nano 30B-A3B — NVFP4",
       "url": "https://howtospark.com/recipes/nemotron-3-nano-30b-a3b-nvfp4",
-      "date": "Latest run 2026-07-31",
-      "claim": "NVIDIA's Nemotron 3 Nano 30B-A3B (31.6B hybrid Mamba-MoE, ~3B active) in NVFP4 on one DGX Spark, serving the full 262,144-token context — 61.2 tok/s single-stream, and still 56.0 tok/s on a 131K-token prompt. Latest normalized throughput: 55.2–61.4 tok/s across 8 latest runs; 2026-07-31."
+      "date": "Latest run 2026-08-01",
+      "claim": "NVIDIA's Nemotron 3 Nano 30B-A3B (31.6B hybrid Mamba-MoE, ~3B active) in NVFP4 on one DGX Spark, serving the full 262,144-token context — 61.2 tok/s single-stream, and still 56.0 tok/s on a 131K-token prompt. Latest normalized throughput: 55.2–61.4 tok/s across 8 latest runs; 2026-08-01."
     },
     "howtospark_laguna_xs_2_1_nvfp4": {
       "title": "HowToSpark recipe: Laguna-XS 2.1 NVFP4",
@@ -645,7 +645,7 @@ window.HOWTOSPARK_DATA = {
       "context": "256K",
       "speedMax": 61.4,
       "speedTypical": "61.4 tok/s",
-      "speedRange": "55.2–61.4 tok/s across 8 latest runs; 2026-07-31",
+      "speedRange": "55.2–61.4 tok/s across 8 latest runs; 2026-08-01",
       "engine": "vLLM 0.24.0 / NVFP4 / 1 Spark",
       "quality": 3,
       "qualityLabel": "HowToSpark measured recipe",
