@@ -3,9 +3,9 @@ window.HOWTOSPARK_DATA = {
   "schemaVersion": 1,
   "mode": "transition",
   "sourceUrl": "https://howtospark.com/",
-  "generatedAt": "2026-08-01T00:00:00.000Z",
+  "generatedAt": "2026-08-07T00:00:00.000Z",
   "latestBenchmarkCount": 10,
-  "latestBenchmarkDate": "2026-08-01",
+  "latestBenchmarkDate": "2026-08-07",
   "hardwareEvidence": [
     "howtospark_hardware"
   ],
@@ -13,7 +13,7 @@ window.HOWTOSPARK_DATA = {
     "howtospark_hardware": {
       "title": "HowToSpark: NVIDIA DGX Spark hardware summary",
       "url": "https://howtospark.com/",
-      "date": "Snapshot 2026-08-01",
+      "date": "Snapshot 2026-08-07",
       "claim": "HowToSpark identifies the benchmark hardware as NVIDIA DGX Spark with 128 GB unified LPDDR5x and 273 GB/s bandwidth."
     },
     "howtospark_deepseek_v4_flash_dspark_dual_spark_1m": {
@@ -55,8 +55,8 @@ window.HOWTOSPARK_DATA = {
     "howtospark_arex_base_q4_k_m": {
       "title": "HowToSpark recipe: AREX-Base 122B-A10B — Q4_K_M",
       "url": "https://howtospark.com/recipes/arex-base-q4-k-m",
-      "date": "Current recipe snapshot",
-      "claim": "BAAI's AREX-Base deep-research agent (122B MoE, ~10B active) in Q4_K_M on one DGX Spark — 23.98 tok/s single-stream, at a measured 250,223-token context. Latest normalized throughput: 23.98 tok/s recipe result."
+      "date": "Latest run 2026-08-07",
+      "claim": "BAAI's AREX-Base deep-research agent (122B MoE, ~10B active) in Q4_K_M on one DGX Spark — 23.98 tok/s single-stream, at a measured 250,223-token context. Latest normalized throughput: 45 tok/s recipe result."
     },
     "howtospark_lfm2_5_8b_a1b_bf16": {
       "title": "HowToSpark recipe: LFM2.5 8B-A1B (Liquid AI) — BF16",
@@ -110,7 +110,7 @@ window.HOWTOSPARK_DATA = {
       "title": "HowToSpark recipe: Qwen3.6 35B-A3B — FP8",
       "url": "https://howtospark.com/recipes/qwen3-6-35b-a3b-fp8",
       "date": "Latest run 2026-07-31",
-      "claim": "Qwen's own FP8 build of Qwen3.6 35B-A3B serves the full 262,144-token context on one DGX Spark in about 41 GiB and, unlike the NVFP4A16 build, it gets a real FP8 kernel path — vLLM picks the TRITON FP8 MoE backend, not the MARLIN fallback. It still decodes slower: 38.3 tok/s against 42.6 for NVFP4A16 and 106.5 for Unsloth's NVFP4-Fast. The reason is bytes, not kernels — the FP8 export carries 30.1 GiB of expert planes against roughly 17.5 — and like every official Qwen3.6 export it ships no MTP head. Latest normalized throughput: 33.3–46.2 tok/s across 2 latest runs; 2026-07-31."
+      "claim": "Qwen's own FP8 build of Qwen3.6 35B-A3B serves the full 262,144-token context on one DGX Spark in about 41 GiB and, unlike the NVFP4A16 build, it gets a real FP8 kernel path — vLLM picks the TRITON FP8 MoE backend, not the MARLIN fallback. It still decodes slower: 38.3 tok/s against 42.6 for NVFP4A16 and 106.5 for Unsloth's NVFP4-Fast. The reason is bytes, not kernels — the FP8 export carries 30.1 GiB of expert planes against roughly 17.5 — and like every official Qwen3.6 export it ships no MTP head. Latest normalized throughput: 38.27 tok/s recipe result."
     },
     "howtospark_kimi_linear_48b_a3b_bf16": {
       "title": "HowToSpark recipe: Kimi Linear 48B-A3B — BF16",
@@ -419,7 +419,7 @@ window.HOWTOSPARK_DATA = {
       "id": "howtospark-arex-base-q4-k-m",
       "sourceSlug": "arex-base-q4-k-m",
       "rank": 7,
-      "name": "AREX-Base 122B-A10B",
+      "name": "AREX-Base (122B-A10B)Q4_K_M",
       "official": "bartowski/BAAI_AREX-Base-GGUF",
       "howToSparkModelUrl": "https://howtospark.com/recipes/arex-base-q4-k-m",
       "nvidiaModelCardUrl": null,
@@ -427,10 +427,10 @@ window.HOWTOSPARK_DATA = {
       "totalParams": "122B",
       "activeParams": "10B active",
       "context": "244.4K",
-      "speedMax": 23.98,
-      "speedTypical": "23.98 tok/s",
-      "speedRange": "23.98 tok/s recipe result",
-      "engine": "recipe quantization / 1 Spark",
+      "speedMax": 45,
+      "speedTypical": "45 tok/s",
+      "speedRange": "45 tok/s recipe result",
+      "engine": "vLLM 0.26.0 / Not stated / 1 Spark",
       "quality": 3,
       "qualityLabel": "HowToSpark measured recipe",
       "recommendation": "Medium — measured recipe",
@@ -751,9 +751,9 @@ window.HOWTOSPARK_DATA = {
       "totalParams": "35B",
       "activeParams": "3B active",
       "context": "256K",
-      "speedMax": 46.2,
-      "speedTypical": "46.2 tok/s",
-      "speedRange": "33.3–46.2 tok/s across 2 latest runs; 2026-07-31",
+      "speedMax": 38.27,
+      "speedTypical": "38.27 tok/s",
+      "speedRange": "38.27 tok/s recipe result",
       "engine": "vLLM 0.26.0 / FP8 / 1 Spark",
       "quality": 3,
       "qualityLabel": "HowToSpark measured recipe",
