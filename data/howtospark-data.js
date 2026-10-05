@@ -3,9 +3,9 @@ window.HOWTOSPARK_DATA = {
   "schemaVersion": 1,
   "mode": "transition",
   "sourceUrl": "https://howtospark.com/",
-  "generatedAt": "2026-10-03T00:00:00.000Z",
+  "generatedAt": "2026-10-04T00:00:00.000Z",
   "latestBenchmarkCount": 10,
-  "latestBenchmarkDate": "2026-10-03",
+  "latestBenchmarkDate": "2026-10-04",
   "hardwareEvidence": [
     "howtospark_hardware"
   ],
@@ -13,14 +13,14 @@ window.HOWTOSPARK_DATA = {
     "howtospark_hardware": {
       "title": "HowToSpark: NVIDIA DGX Spark hardware summary",
       "url": "https://howtospark.com/",
-      "date": "Snapshot 2026-10-03",
+      "date": "Snapshot 2026-10-04",
       "claim": "HowToSpark identifies the benchmark hardware as NVIDIA DGX Spark with 128 GB unified LPDDR5x and 273 GB/s bandwidth."
     },
     "howtospark_deepseek_v4_flash_dspark_dual_spark_1m": {
       "title": "HowToSpark recipe: DeepSeek V4 Flash DSpark",
       "url": "https://howtospark.com/recipes/deepseek-v4-flash-dspark-dual-spark-1m",
-      "date": "Latest run 2026-10-03",
-      "claim": "Serve the 284B/13B DeepSeek V4 Flash DSpark checkpoint across two DGX Sparks at its full 1M-token context, with FP4 experts, an NVFP4 MLA KV cache, and DSpark speculative decoding at k=5 — 42.0 tok/s single-stream on prose and 76.0 on code. Latest normalized throughput: 34.4–41.4 tok/s across 4 latest runs; 2026-10-03."
+      "date": "Latest run 2026-10-04",
+      "claim": "Serve the 284B/13B DeepSeek V4 Flash DSpark checkpoint across two DGX Sparks at its full 1M-token context, with FP4 experts, an NVFP4 MLA KV cache, and DSpark speculative decoding at k=5 — 42.0 tok/s single-stream on prose and 76.0 on code. Latest normalized throughput: 34.4–41.4 tok/s across 4 latest runs; 2026-10-04."
     },
     "howtospark_qwen3_6_35b_a3b_nvfp4_fast": {
       "title": "HowToSpark recipe: Qwen3.6 35B-A3B NVFP4 (Unsloth Fast)",
@@ -206,7 +206,7 @@ window.HOWTOSPARK_DATA = {
       "context": "1M",
       "speedMax": 42,
       "speedTypical": "42 tok/s",
-      "speedRange": "34.4–41.4 tok/s across 4 latest runs; 2026-10-03",
+      "speedRange": "34.4–41.4 tok/s across 4 latest runs; 2026-10-04",
       "engine": "vLLM 0.25.2.dev0+g752a3a504 (ghcr.io/anemll/dspark-vllm-gx10:0.1.1) / FP4 / 2 Sparks",
       "quality": 4,
       "qualityLabel": "HowToSpark: DeepSeek V4 Flash DSpark",
