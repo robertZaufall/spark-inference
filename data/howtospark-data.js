@@ -20,7 +20,7 @@ window.HOWTOSPARK_DATA = {
       "title": "HowToSpark recipe: DeepSeek V4 Flash DSpark",
       "url": "https://howtospark.com/recipes/deepseek-v4-flash-dspark-dual-spark-1m",
       "date": "Latest run 2026-10-04",
-      "claim": "Serve the 284B/13B DeepSeek V4 Flash DSpark checkpoint across two DGX Sparks at its full 1M-token context, with FP4 experts, an NVFP4 MLA KV cache, and DSpark speculative decoding at k=5 — 42.0 tok/s single-stream on prose and 76.0 on code. Latest normalized throughput: 34.4–41.4 tok/s across 4 latest runs; 2026-10-04."
+      "claim": "Serve the 284B/13B DeepSeek V4 Flash DSpark checkpoint across two DGX Sparks at its full 1M-token context, with FP4 experts, an NVFP4 MLA KV cache, and DSpark speculative decoding at k=5 — 42.0 tok/s single-stream on prose and 76.0 on code. Latest normalized throughput: 49.8–58.7 tok/s across 4 latest runs; 2026-10-04."
     },
     "howtospark_qwen3_6_35b_a3b_nvfp4_fast": {
       "title": "HowToSpark recipe: Qwen3.6 35B-A3B NVFP4 (Unsloth Fast)",
@@ -204,10 +204,10 @@ window.HOWTOSPARK_DATA = {
       "totalParams": "284B",
       "activeParams": "13B active",
       "context": "1M",
-      "speedMax": 42,
-      "speedTypical": "42 tok/s",
-      "speedRange": "34.4–41.4 tok/s across 4 latest runs; 2026-10-04",
-      "engine": "vLLM 0.25.2.dev0+g752a3a504 (ghcr.io/anemll/dspark-vllm-gx10:0.1.1) / FP4 / 2 Sparks",
+      "speedMax": 58.7,
+      "speedTypical": "58.7 tok/s",
+      "speedRange": "49.8–58.7 tok/s across 4 latest runs; 2026-10-04",
+      "engine": "vLLM 0.25.2.dev0+g752a3a504 / FP4 / 2 Sparks",
       "quality": 4,
       "qualityLabel": "HowToSpark: DeepSeek V4 Flash DSpark",
       "recommendation": "High — deepseek v4 flash dspark",
